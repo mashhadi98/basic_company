@@ -8,8 +8,15 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Company.styles.css" asp-append-version="true" />
+    <link href="~/vazir-font-v18.0.1/css/vazir-fonts.css" rel="stylesheet" />
 </head>
 <body>
+    @if (User.Identity?.IsAuthenticated != null && User.IsInRole("Admin"))
+    {
+        <div style="position: relative;background: black;width: 100%;top: 0;left: 0;text-align: center; padding: 5px 0;">
+            <a style="color: white;text-decoration: none;" asp-action="Index" asp-area="Admin" asp-controller="Home">داشبورد مدیریت</a>
+        </div>
+    }
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">

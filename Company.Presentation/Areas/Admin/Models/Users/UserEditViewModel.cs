@@ -1,9 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Company.Presentation.Models.Account;
+namespace Company.Presentation.Areas.Admin.Models.Users;
 
-public sealed class RegisterViewModel
+public sealed class UserEditViewModel
 {
+    [Required]
+    public string Id { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "نام کاربری الزامی است.")]
     [Display(Name = "نام کاربری")]
     [StringLength(64, MinimumLength = 3, ErrorMessage = "نام کاربری باید بین ۳ تا ۶۴ کاراکتر باشد.")]
@@ -14,18 +17,6 @@ public sealed class RegisterViewModel
     [EmailAddress(ErrorMessage = "فرمت ایمیل معتبر نیست.")]
     [Display(Name = "ایمیل")]
     public string Email { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "رمز عبور الزامی است.")]
-    [DataType(DataType.Password)]
-    [MinLength(8, ErrorMessage = "حداقل ۸ کاراکتر.")]
-    [Display(Name = "رمز عبور")]
-    public string Password { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "تکرار رمز الزامی است.")]
-    [DataType(DataType.Password)]
-    [Compare(nameof(Password), ErrorMessage = "رمز و تکرار آن یکسان نیست.")]
-    [Display(Name = "تکرار رمز عبور")]
-    public string ConfirmPassword { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "نام الزامی است.")]
     [Display(Name = "نام")]
@@ -42,4 +33,11 @@ public sealed class RegisterViewModel
     [Display(Name = "شماره تماس")]
     [StringLength(32)]
     public string PhoneNumber { get; set; } = string.Empty;
+
+    [Display(Name = "تأیید ایمیل")]
+    public bool EmailConfirmed { get; set; }
+
+    [Display(Name = "تأیید شماره تماس")]
+    public bool PhoneNumberConfirmed { get; set; }
 }
+

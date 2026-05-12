@@ -41,12 +41,7 @@ public sealed class PermissionClaimsPrincipalFactory : UserClaimsPrincipalFactor
             .Select(rp => rp.Permission.Name)
             .ToListAsync();
 
-        var direct = await _dbContext.UserPermissions.AsNoTracking()
-            .Where(up => up.UserId == user.Id)
-            .Select(up => up.Permission.Name)
-            .ToListAsync();
-
-        foreach (var name in fromRoles.Concat(direct).Distinct(StringComparer.Ordinal))
+        foreach (var name in fromRoles.Distinct(StringComparer.Ordinal))
         {
             identity.AddClaim(new Claim(AuthClaimTypes.Permission, name));
         }

@@ -3,12 +3,13 @@
 ################################################################################
 
 /.vs
-/Company.Application/bin/Debug/net10.0
+
 /Company.Application/obj
-/Company.Domain/bin/Debug/net10.0
 /Company.Domain/obj
-/Company.Infrastructure/bin/Debug/net10.0
 /Company.Infrastructure/obj
-/Company.Presentation/bin/Debug/net10.0
 /Company.Presentation/obj
 /.cursor
+/Company.Application/bin
+/Company.Domain/bin
+/Company.Infrastructure/bin
+/Company.Presentation/bin

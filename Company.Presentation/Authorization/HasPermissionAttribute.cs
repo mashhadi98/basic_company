@@ -11,7 +11,6 @@ public sealed class HasPermissionAttribute : AuthorizeAttribute
 {
     public HasPermissionAttribute(string permissionName)
     {
-        Console.WriteLine(permissionName);
         ArgumentException.ThrowIfNullOrWhiteSpace(permissionName);
         Policy = PermissionRequirement.PolicyPrefix + permissionName;
     }

@@ -4,10 +4,9 @@ namespace Company.Presentation.Models.Account;
 
 public sealed class LoginViewModel
 {
-    [Required(ErrorMessage = "ایمیل الزامی است.")]
-    [EmailAddress]
-    [Display(Name = "ایمیل")]
-    public string Email { get; set; } = string.Empty;
+    [Required(ErrorMessage = "نام کاربری الزامی است.")]
+    [Display(Name = "نام کاربری")]
+    public string Username { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "رمز عبور الزامی است.")]
     [DataType(DataType.Password)]

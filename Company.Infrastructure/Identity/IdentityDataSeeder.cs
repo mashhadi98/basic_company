@@ -19,6 +19,7 @@ public static class IdentityDataSeeder
         new("Users.Manage", "مدیریت کاربران", "ایجاد/ویرایش/حذف کاربران", "Users"),
         new("Roles.View", "مشاهده نقش‌ها", "لیست نقش‌ها", "Roles"),
         new("Roles.Manage", "مدیریت نقش‌ها", "تخصیص مجوز به نقش‌ها", "Roles"),
+        new("Permissions.View", "مشاهده مجوزها", "لیست مجوزها", "Permissions"),
         new("Product.View", "مشاهده محصولات", "لیست محصولات", "Product"),
         new("Product.Create", "ایجاد محصول", "افزودن محصول جدید", "Product"),
         new("Product.Edit", "ویرایش محصول", "ویرایش محصول موجود", "Product"),
@@ -124,8 +125,11 @@ public static class IdentityDataSeeder
         IdentitySeedOptions seedOptions,
         CancellationToken cancellationToken)
     {
+        var userName = seedOptions.AdminUserName;
         var email = seedOptions.AdminEmail;
-        var existing = await userManager.FindByEmailAsync(email).ConfigureAwait(false);
+
+        var existing = await userManager.FindByNameAsync(userName).ConfigureAwait(false)
+            ?? await userManager.FindByEmailAsync(email).ConfigureAwait(false);
         if (existing is not null)
         {
             await EnsureAdminRoleAssignedAsync(userManager, existing, seedOptions.AdminRoleName).ConfigureAwait(false);
@@ -134,7 +138,7 @@ public static class IdentityDataSeeder
 
         var user = new ApplicationUser
         {
-            UserName = email,
+            UserName = userName,
             Email = email,
             EmailConfirmed = true,
             PhoneNumber = seedOptions.AdminPhoneNumber,

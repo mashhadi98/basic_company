@@ -75,42 +75,4 @@ public sealed class PermissionManagementService : IPermissionManagementService
             await _stampInvalidator.InvalidateUsersInRoleAsync(roleName, cancellationToken).ConfigureAwait(false);
         }
     }
-
-    public async Task AssignPermissionToUserAsync(string userId, string permissionName, CancellationToken cancellationToken = default)
-    {
-        var permission = await _dbContext.Permissions.FirstOrDefaultAsync(p => p.Name == permissionName, cancellationToken).ConfigureAwait(false)
-            ?? throw new InvalidOperationException($"Permission '{permissionName}' not found.");
-
-        var exists = await _dbContext.UserPermissions.AnyAsync(
-            up => up.UserId == userId && up.PermissionId == permission.Id,
-            cancellationToken).ConfigureAwait(false);
-
-        if (!exists)
-        {
-            _dbContext.UserPermissions.Add(new UserPermission
-            {
-                UserId = userId,
-                PermissionId = permission.Id,
-            });
-            await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            await _stampInvalidator.InvalidateUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        }
-    }
-
-    public async Task RemovePermissionFromUserAsync(string userId, string permissionName, CancellationToken cancellationToken = default)
-    {
-        var permission = await _dbContext.Permissions.FirstOrDefaultAsync(p => p.Name == permissionName, cancellationToken).ConfigureAwait(false)
-            ?? throw new InvalidOperationException($"Permission '{permissionName}' not found.");
-
-        var link = await _dbContext.UserPermissions.FirstOrDefaultAsync(
-            up => up.UserId == userId && up.PermissionId == permission.Id,
-            cancellationToken).ConfigureAwait(false);
-
-        if (link is not null)
-        {
-            _dbContext.UserPermissions.Remove(link);
-            await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            await _stampInvalidator.InvalidateUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        }
-    }
 }

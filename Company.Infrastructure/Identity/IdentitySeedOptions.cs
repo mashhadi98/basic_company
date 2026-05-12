@@ -7,6 +7,7 @@ public sealed class IdentitySeedOptions
 {
     public const string SectionName = "IdentitySeed";
 
+    public string AdminUserName { get; set; } = "admin";
     public string AdminEmail { get; set; } = "admin@company.local";
     public string AdminPassword { get; set; } = "Admin@123456";
     public string AdminPhoneNumber { get; set; } = "+989000000000";

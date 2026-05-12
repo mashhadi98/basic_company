@@ -1,0 +1,40 @@
+@model IReadOnlyList<Company.Domain.Entities.Authorization.Permission>
+@{
+    ViewData["Title"] = "مجوزها";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">لیست مجوزها</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead>
+                        <tr>
+                            <th>گروه</th>
+                            <th>نام</th>
+                            <th>عنوان</th>
+                            <th>توضیح</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var p in Model)
+                        {
+                            <tr>
+                                <td>@p.Group</td>
+                                <td><code>@p.Name</code></td>
+                                <td>@p.DisplayName</td>
+                                <td>@p.Description</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

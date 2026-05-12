@@ -1,0 +1,46 @@
+@model IReadOnlyList<Company.Presentation.Areas.Admin.Models.Roles.RoleListItemViewModel>
+@{
+    ViewData["Title"] = "نقش‌ها";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">لیست نقش‌ها</h3>
+                <a class="btn btn-primary" href="/Admin/Roles/Create">ایجاد نقش</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead>
+                        <tr>
+                            <th>نام</th>
+                            <th>توضیح</th>
+                            <th style="width: 320px;">عملیات</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var r in Model)
+                        {
+                            <tr>
+                                <td>@r.Name</td>
+                                <td>@r.Description</td>
+                                <td class="d-flex gap-2">
+                                    <a class="btn btn-sm btn-outline-primary" href="/Admin/Roles/Edit/@r.Id">ویرایش</a>
+                                    <a class="btn btn-sm btn-outline-secondary" href="/Admin/Roles/Permissions/@r.Id">مجوزها</a>
+                                    <form asp-area="Admin" asp-controller="Roles" asp-action="Delete" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@r.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('حذف شود؟')">حذف</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

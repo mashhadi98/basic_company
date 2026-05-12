@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Company.Presentation.Models.Account;
+namespace Company.Presentation.Areas.Admin.Models.Users;
 
-public sealed class RegisterViewModel
+public sealed class UserCreateViewModel
 {
     [Required(ErrorMessage = "نام کاربری الزامی است.")]
     [Display(Name = "نام کاربری")]
@@ -21,12 +21,6 @@ public sealed class RegisterViewModel
     [Display(Name = "رمز عبور")]
     public string Password { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "تکرار رمز الزامی است.")]
-    [DataType(DataType.Password)]
-    [Compare(nameof(Password), ErrorMessage = "رمز و تکرار آن یکسان نیست.")]
-    [Display(Name = "تکرار رمز عبور")]
-    public string ConfirmPassword { get; set; } = string.Empty;
-
     [Required(ErrorMessage = "نام الزامی است.")]
     [Display(Name = "نام")]
     [StringLength(128)]
@@ -43,3 +37,4 @@ public sealed class RegisterViewModel
     [StringLength(32)]
     public string PhoneNumber { get; set; } = string.Empty;
 }
+

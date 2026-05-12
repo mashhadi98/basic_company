@@ -44,9 +44,16 @@ public sealed class AccountController : Controller
             return View(model);
         }
 
+        var existingUsername = await _userManager.FindByNameAsync(model.Username).ConfigureAwait(false);
+        if (existingUsername is not null)
+        {
+            ModelState.AddModelError(nameof(RegisterViewModel.Username), "این نام کاربری قبلاً استفاده شده است.");
+            return View(model);
+        }
+
         var user = new ApplicationUser
         {
-            UserName = model.Email,
+            UserName = model.Username,
             Email = model.Email,
             FirstName = model.FirstName,
             LastName = model.LastName,
@@ -121,7 +128,7 @@ public sealed class AccountController : Controller
             return View(model);
         }
 
-        var user = await _userManager.FindByEmailAsync(model.Email).ConfigureAwait(false);
+        var user = await _userManager.FindByNameAsync(model.Username).ConfigureAwait(false);
         if (user is null)
         {
             ModelState.AddModelError(string.Empty, "ورود ناموفق بود.");
@@ -129,7 +136,7 @@ public sealed class AccountController : Controller
         }
 
         var result = await _signInManager.PasswordSignInAsync(
-            user.UserName!,
+            model.Username,
             model.Password,
             model.RememberMe,
             lockoutOnFailure: true).ConfigureAwait(false);
@@ -156,7 +163,7 @@ public sealed class AccountController : Controller
             return View(model);
         }
 
-        ModelState.AddModelError(string.Empty, "ایمیل یا رمز عبور نادرست است.");
+        ModelState.AddModelError(string.Empty, "نام کاربری یا رمز عبور نادرست است.");
         return View(model);
     }
 

@@ -12,8 +12,4 @@ public interface IPermissionManagementService
     Task AssignPermissionToRoleAsync(string roleName, string permissionName, CancellationToken cancellationToken = default);
 
     Task RemovePermissionFromRoleAsync(string roleName, string permissionName, CancellationToken cancellationToken = default);
-
-    Task AssignPermissionToUserAsync(string userId, string permissionName, CancellationToken cancellationToken = default);
-
-    Task RemovePermissionFromUserAsync(string userId, string permissionName, CancellationToken cancellationToken = default);
 }

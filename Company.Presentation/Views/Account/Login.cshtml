@@ -2,33 +2,62 @@
 @{
     ViewData["Title"] = "ورود";
     var returnUrl = ViewData["ReturnUrl"] as string;
+    Layout = "_AccountLayout";
 }
 
-<h1 class="mb-4">ورود</h1>
+<div class="card-body login-card-body">
+    <p class="login-box-msg">Sign in to start your session</p>
 
-<form asp-action="Login" method="post">
-    <input type="hidden" name="returnUrl" value="@returnUrl" />
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <form asp-action="Login" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="input-group mb-1">
+            <div class="form-floating">
+                <input asp-for="Username" class="form-control" autocomplete="off" />
+                <label asp-for="Username"></label>
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="input-group-text">
+                <span class="fas fa-user"></span>
+            </div>
+        </div>
+        <div class="input-group mb-1">
+            <div class="form-floating">
+                <input asp-for="Password" class="form-control" autocomplete="off" />
+                <label asp-for="Password"></label>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+            </div>
+        </div>
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-8 d-inline-flex align-items-center">
+                <div class="form-check">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="RememberMe" class="form-check-label"></label>
+                </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-4">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">ورود</button>
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!--end::Row-->
+    </form>
+    <!-- /.social-auth-links -->
+    <hr />
+    <p class="mb-1 mt-3">
+        <a class="btn btn-link w-100" asp-action="ForgotPassword">فراموشی رمز عبور</a>
+    </p>
+    <p class="mb-0">
+        <a class="btn btn-link w-100" asp-action="Register">ثبت‌نام</a>
+    </p>
+</div>
 
-    <div class="mb-3">
-        <label asp-for="Username" class="form-label"></label>
-        <input asp-for="Username" class="form-control" autocomplete="username" />
-        <span asp-validation-for="Username" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Password" class="form-label"></label>
-        <input asp-for="Password" class="form-control" autocomplete="current-password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <div class="mb-3 form-check">
-        <input asp-for="RememberMe" class="form-check-input" />
-        <label asp-for="RememberMe" class="form-check-label"></label>
-    </div>
-
-    <button type="submit" class="btn btn-primary">ورود</button>
-    <a class="btn btn-link" asp-action="ForgotPassword">فراموشی رمز عبور</a>
-    <a class="btn btn-link" asp-action="Register">ثبت‌نام</a>
-</form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

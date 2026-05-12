@@ -1,53 +1,110 @@
 @model Company.Presentation.Models.Account.RegisterViewModel
 @{
     ViewData["Title"] = "ثبت‌نام";
+    Layout = "_AccountLayout";
 }
-
-<h1 class="mb-4">ثبت‌نام</h1>
+<div class="card-body login-card-body">
+    <p class="login-box-msg">Sign in to start your session</p>
 
 <form asp-action="Register" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-    <div class="mb-3">
-        <label asp-for="Username" class="form-label"></label>
-        <input asp-for="Username" class="form-control" autocomplete="username" />
-        <span asp-validation-for="Username" class="text-danger"></span>
+    <div class="input-group mb-1">
+        <div class="form-floating">
+            <label asp-for="Username" class="form-label"></label>
+            <input asp-for="Username" class="form-control" autocomplete="username" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        <div class="input-group-text">
+            <span class="bi bi-person"></span>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="FirstName" class="form-label"></label>
-        <input asp-for="FirstName" class="form-control" autocomplete="given-name" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+    <div class="input-group mb-1">
+        <div class="form-floating">
+            <label asp-for="FirstName" class="form-label"></label>
+            <input asp-for="FirstName" class="form-control" autocomplete="given-name" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="input-group-text">
+            <span class="bi bi-envelope"></span>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="LastName" class="form-label"></label>
-        <input asp-for="LastName" class="form-control" autocomplete="family-name" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
+    <div class="input-group mb-1">
+        <div class="form-floating">
+            <label asp-for="LastName" class="form-label"></label>
+            <input asp-for="LastName" class="form-control" autocomplete="family-name" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="input-group-text">
+            <span class="bi bi-envelope"></span>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="PhoneNumber" class="form-label"></label>
-        <input asp-for="PhoneNumber" class="form-control" autocomplete="tel" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    <div class="input-group mb-1">
+        <div class="form-floating">
+            <label asp-for="PhoneNumber" class="form-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" autocomplete="tel" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="input-group-text">
+            <span class="bi bi-envelope"></span>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control" autocomplete="email" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+    <div class="input-group mb-1">
+        <div class="form-floating">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" autocomplete="email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="input-group-text">
+            <span class="bi bi-envelope"></span>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="Password" class="form-label"></label>
-        <input asp-for="Password" class="form-control" autocomplete="new-password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
+    <div class="input-group mb-1">
+        <div class="form-floating">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="input-group-text">
+            <span class="bi bi-lock-fill"></span>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="ConfirmPassword" class="form-label"></label>
-        <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    <div class="input-group mb-1">
+        <div class="form-floating">
+            <label asp-for="ConfirmPassword" class="form-label"></label>
+            <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+        <div class="input-group-text">
+            <span class="bi bi-lock-fill"></span>
+        </div>
     </div>
-
-    <button type="submit" class="btn btn-primary">ثبت‌نام</button>
+    <!--begin::Row-->
+    <div class="row">
+        <div class="col-8 d-inline-flex align-items-center">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                <label class="form-check-label" for="flexCheckDefault">
+                    I agree to the <a href="#">terms</a>
+                </label>
+            </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-4">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-link">ثبت‌نام</button>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <!--end::Row-->
 </form>
+    <!-- /.social-auth-links -->
+    <hr />
 
+    <p class="mb-0">
+        <a class="btn btn-outline-success w-100" asp-action="Login">ورود به حساب کاربری</a>
+    </p>
+</div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

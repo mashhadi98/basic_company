@@ -1,6 +1,8 @@
 @model Company.Presentation.Areas.Admin.Models.Users.UserCreateViewModel
 @{
     ViewData["Title"] = "ایجاد کاربر";
+    ViewData["BreadcrumbParent"] = "کاربران";
+    ViewData["BreadcrumbParentUrl"] = Url.Action("Index", "Users", new { area = "Admin" });
 }
 
 <div class="row">

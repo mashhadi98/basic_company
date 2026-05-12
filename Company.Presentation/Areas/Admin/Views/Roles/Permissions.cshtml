@@ -1,6 +1,8 @@
 @model Company.Presentation.Areas.Admin.Models.Roles.RolePermissionsViewModel
 @{
     ViewData["Title"] = "مجوزهای نقش";
+    ViewData["BreadcrumbParent"] = "نقش";
+    ViewData["BreadcrumbParentUrl"] = Url.Action("Index", "Roles", new { area = "Admin" });
 }
 
 <div class="row">

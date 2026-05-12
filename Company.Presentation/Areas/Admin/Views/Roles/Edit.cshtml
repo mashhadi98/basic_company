@@ -1,6 +1,8 @@
 @model Company.Presentation.Areas.Admin.Models.Roles.RoleCreateEditViewModel
 @{
     ViewData["Title"] = string.IsNullOrEmpty(Model.Id) ? "ایجاد نقش" : "ویرایش نقش";
+    ViewData["BreadcrumbParent"] = "نقش";
+    ViewData["BreadcrumbParentUrl"] = Url.Action("Index", "Roles", new { area = "Admin" });
 }
 
 <div class="row">

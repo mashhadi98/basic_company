@@ -3,7 +3,7 @@
 <!--begin::Head-->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE v4 | Dashboard</title>
+    <title>@(ViewData["Title"] as string ?? "پنل مدیریت")</title>
 
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
@@ -62,6 +62,25 @@
 <!--end::Head-->
 <!--begin::Body-->
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    @{
+        var currentArea = ViewContext.RouteData.Values["area"]?.ToString() ?? "";
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+        var pageTitle = ViewData["Title"] as string;
+        if (string.IsNullOrWhiteSpace(pageTitle))
+        {
+            pageTitle = currentAction?.Equals("Index", StringComparison.OrdinalIgnoreCase) == true
+            ? currentController
+            : $"{currentController} / {currentAction}";
+        }
+
+        // Optional overrides per view:
+        // ViewData["BreadcrumbParent"] = "کاربران";
+        // ViewData["BreadcrumbParentUrl"] = Url.Action("Index","Users", new { area="Admin" });
+        var breadcrumbParent = ViewData["BreadcrumbParent"] as string;
+        var breadcrumbParentUrl = ViewData["BreadcrumbParentUrl"] as string;
+    }
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
@@ -284,38 +303,39 @@
             <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
-                    <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column"
                         data-lte-toggle="treeview"
                         role="navigation"
                         aria-label="Main navigation"
                         data-accordion="false"
                         id="navigation">
+
+                        <!-- داشبورد -->
                         <li class="nav-item">
-                            <a href="/Admin" class="nav-link active">
+                            <a href="/Admin" class="nav-link @Html.IsActive("Home", "Index")">
                                 <i class="nav-icon bi bi-speedometer"></i>
                                 <p>داشبورد</p>
                             </a>
                         </li>
 
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
+                        <!-- کاربران -->
+                        <li class="nav-item @Html.IsMenuOpen("Users")">
+                            <a href="#" class="nav-link @Html.IsActive("Users")">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>
                                     کاربران
                                     <i class="nav-arrow bi bi-chevron-right"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview" role="navigation" aria-label="Navigation 9">
+                            <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/Admin/Users" class="nav-link">
+                                    <a href="/Admin/Users" class="nav-link @Html.IsActive("Users", "Index")">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>لیست کاربران</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/Admin/Users/Create" class="nav-link">
+                                    <a href="/Admin/Users/Create" class="nav-link @Html.IsActive("Users", "Create")">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>ایجاد کاربر جدید</p>
                                     </a>
@@ -323,9 +343,9 @@
                             </ul>
                         </li>
 
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
+                        <!-- نقش‌ها -->
+                        <li class="nav-item @Html.IsMenuOpen("Roles")">
+                            <a href="#" class="nav-link @Html.IsActive("Roles")">
                                 <i class="nav-icon fas fa-user-shield"></i>
                                 <p>
                                     نقش‌ها
@@ -334,27 +354,29 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/Admin/Roles" class="nav-link active">
+                                    <a href="/Admin/Roles" class="nav-link @Html.IsActive("Roles", "Index")">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>لیست نقش‌ها</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/Admin/Roles/Create" class="nav-link">
+                                    <a href="/Admin/Roles/Create" class="nav-link @Html.IsActive("Roles", "Create")">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>ایجاد نقش جدید</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
+
+                        <!-- مجوزها -->
                         <li class="nav-item">
-                            <a href="/Admin/Permissions" class="nav-link active">
+                            <a href="/Admin/Permissions" class="nav-link @Html.IsActive("Permissions", "Index")">
                                 <i class="nav-icon fas fa-key"></i>
                                 <p>مجوزها</p>
                             </a>
                         </li>
+
                     </ul>
-                    <!--end::Sidebar Menu-->
                 </nav>
             </div>
             <!--end::Sidebar Wrapper-->
@@ -369,12 +391,41 @@
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Dashboard</h3>
+                            <h3 class="mb-0">@pageTitle</h3>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                                <li class="breadcrumb-item">
+                                    <a href="/Admin">داشبورد</a>
+                                </li>
+
+                                @if (!string.IsNullOrWhiteSpace(breadcrumbParent))
+                                {
+                                    if (!string.IsNullOrWhiteSpace(breadcrumbParentUrl))
+                                    {
+                                        <li class="breadcrumb-item">
+                                            <a href="@breadcrumbParentUrl">@breadcrumbParent</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="breadcrumb-item">@breadcrumbParent</li>
+                                    }
+                                }
+                                else if (!string.IsNullOrWhiteSpace(currentController)
+                                && !currentController.Equals("Home", StringComparison.OrdinalIgnoreCase)
+                                && !currentController.Equals("Dashboard", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    // For non-Index actions we add a controller-level crumb.
+                                    if (!currentAction.Equals("Index", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <li class="breadcrumb-item">
+                                            <a href="/Admin/@currentController">@currentController</a>
+                                        </li>
+                                    }
+                                }
+
+                                <li class="breadcrumb-item active" aria-current="page">@pageTitle</li>
                             </ol>
                         </div>
                     </div>

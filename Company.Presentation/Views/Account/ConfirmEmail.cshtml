@@ -1,0 +1,15 @@
+@model bool
+@{
+    ViewData["Title"] = "تأیید ایمیل";
+}
+
+@if (Model)
+{
+    <h1 class="text-success">ایمیل با موفقیت تأیید شد.</h1>
+    <p><a asp-action="Login">ورود</a></p>
+}
+else
+{
+    <h1 class="text-danger">تأیید ایمیل ناموفق بود.</h1>
+    <p><a asp-action="Register">ثبت‌نام مجدد</a></p>
+}

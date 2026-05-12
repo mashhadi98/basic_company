@@ -1,0 +1,35 @@
+@model Company.Presentation.Models.Account.LoginViewModel
+@{
+    ViewData["Title"] = "ورود";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+}
+
+<h1 class="mb-4">ورود</h1>
+
+<form asp-action="Login" method="post">
+    <input type="hidden" name="returnUrl" value="@returnUrl" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" autocomplete="username" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" class="form-control" autocomplete="current-password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="mb-3 form-check">
+        <input asp-for="RememberMe" class="form-check-input" />
+        <label asp-for="RememberMe" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">ورود</button>
+    <a class="btn btn-link" asp-action="ForgotPassword">فراموشی رمز عبور</a>
+    <a class="btn btn-link" asp-action="Register">ثبت‌نام</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

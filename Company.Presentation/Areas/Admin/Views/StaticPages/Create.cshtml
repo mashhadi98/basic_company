@@ -1,0 +1,106 @@
+@model Company.Presentation.Areas.Admin.Models.StaticPageViewModel
+
+@{
+    ViewData["Title"] = "ایجاد صفحهٔ ثابت";
+    ViewData["BreadcrumbParent"] = "صفحات ثابت";
+    ViewData["BreadcrumbParentUrl"] = Url.Action("Index", "StaticPages", new { area = "Admin" });
+}
+
+<div class="row">
+    <div class="col-12">
+        <form method="post" asp-action="Create" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">ایجاد صفحهٔ ثابت</h3>
+                        </div>
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                            <div class="mb-3">
+                                <label asp-for="Key" class="form-label">کلید صفحه *</label>
+                                <input asp-for="Key" class="form-control" placeholder="مثال: aboutus" dir="ltr" />
+                                <small class="form-text text-muted d-block mt-1">فقط حروف انگلیسی، اعداد، خط تیره و زیرخط</small>
+                                <span asp-validation-for="Key" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Title" class="form-label">عنوان *</label>
+                                <input asp-for="Title" class="form-control" placeholder="مثال: درباره ما" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Summary" class="form-label">خلاصه *</label>
+                                <textarea asp-for="Summary" class="form-control" rows="3" placeholder="خلاصهٔ کوتاه برای نمایش در لیست‌ها"></textarea>
+                                <span asp-validation-for="Summary" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label">توضیحات کامل *</label>
+                                <textarea asp-for="Description" class="form-control" rows="6" placeholder="توضیحات کامل صفحه"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input asp-for="IsPublished" class="form-check-input" />
+                                <label asp-for="IsPublished" class="form-check-label">منتشر شود</label>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">ذخیره</button>
+                                <a class="btn btn-secondary" href="/Admin/StaticPages">بازگشت</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">تصویر صفحه</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-12">
+                                    <label asp-for="ImageFile" class="form-label">آپلود تصویر</label>
+                                    <input asp-for="ImageFile" id="imageFile" type="file" accept="image/*" class="form-control" />
+                                    <small class="form-text text-muted d-block mt-1">فرمت‌های قابل‌قبول: JPG، PNG، GIF، WEBP</small>
+                                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">پیش‌نمایش تصویر</label>
+                                    <div class="border rounded p-2 text-center">
+                                        <img id="imagePreview" src="@(string.IsNullOrWhiteSpace(Model.Image) ? "" : Model.Image)" class="img-fluid" alt="پیش‌نمایش تصویر" style="max-height: 240px; width: auto; display: @(string.IsNullOrWhiteSpace(Model.Image) ? "none" : "inline-block")" />
+                                        <div id="imagePlaceholder" class="text-muted" style="display: @(string.IsNullOrWhiteSpace(Model.Image) ? "block" : "none")">هنوز تصویری انتخاب نشده است.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('imageFile').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('imagePreview');
+            const placeholder = document.getElementById('imagePlaceholder');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'inline-block';
+                    placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

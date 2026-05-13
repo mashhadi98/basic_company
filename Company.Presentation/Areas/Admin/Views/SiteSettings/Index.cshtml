@@ -1,0 +1,108 @@
+@model List<Company.Application.Features.SiteSettings.DTOs.SiteSettingDto>
+
+@{
+    ViewData["Title"] = "تنظیمات سایت";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card card-outline card-primary">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">لیست تنظیمات سایت</h3>
+                <a class="btn btn-primary ms-auto" href="/Admin/SiteSettings/Create">ایجاد تنظیم جدید</a>
+            </div>
+            <div class="card-body">
+                @if (Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>کلید</th>
+                                    <th>نوع</th>
+                                    <th>مقدار</th>
+                                    <th>وضعیت</th>
+                                    <th>ترتیب</th>
+                                    <th style="width: 240px;">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var setting in Model)
+                                {
+                                    <tr>
+                                        <td><code>@setting.Key</code></td>
+                                        <td>
+                                            <span class="badge bg-secondary">
+                                                @(setting.Type switch
+                                                {
+                                                    Company.Domain.Entities.SiteSettingType.String => "متن",
+                                                    Company.Domain.Entities.SiteSettingType.Number => "عدد",
+                                                    Company.Domain.Entities.SiteSettingType.Image => "تصویر",
+                                                    Company.Domain.Entities.SiteSettingType.Video => "ویدیو",
+                                                    Company.Domain.Entities.SiteSettingType.Zip => "ZIP",
+                                                    Company.Domain.Entities.SiteSettingType.File => "فایل",
+                                                    _ => "نامشخص"
+                                                })
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if (setting.Type == Company.Domain.Entities.SiteSettingType.Image)
+                                            {
+                                                <img src="@setting.Value" alt="@setting.Key" style="max-height: 50px;" />
+                                            }
+                                            else if (setting.Type == Company.Domain.Entities.SiteSettingType.Video)
+                                            {
+                                                <a href="@setting.Value" target="_blank" class="btn btn-sm btn-outline-info">مشاهده ویدیو</a>
+                                            }
+                                            else if (setting.Type == Company.Domain.Entities.SiteSettingType.Zip || setting.Type == Company.Domain.Entities.SiteSettingType.File)
+                                            {
+                                                <a href="@setting.Value" target="_blank" class="btn btn-sm btn-outline-info">دانلود</a>
+                                            }
+                                            else
+                                            {
+                                                <span>@(setting.Value.Length > 50 ? setting.Value.Substring(0, 50) + "..." : setting.Value)</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (setting.IsPublished)
+                                            {
+                                                <span class="badge bg-success">منتشر شده</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">پیش‌نویس</span>
+                                            }
+                                        </td>
+                                        <td>@setting.SortOrder</td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-primary" href="/Admin/SiteSettings/Edit/@setting.Id">ویرایش</a>
+                                            <form method="post" action="/Admin/SiteSettings/TogglePublish/@setting.Id" style="display: inline;">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-warning" title="@(setting.IsPublished ? "لغو انتشار" : "انتشار")">
+                                                    <i class="fas fa-@(setting.IsPublished ? "eye-slash" : "eye")"></i>
+                                                </button>
+                                            </form>
+                                            <form method="post" action="/Admin/SiteSettings/Delete/@setting.Id" style="display: inline;" onsubmit="return confirm('آیا مطمئن هستید؟')">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle"></i>
+                        هیچ تنظیمی یافت نشد.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

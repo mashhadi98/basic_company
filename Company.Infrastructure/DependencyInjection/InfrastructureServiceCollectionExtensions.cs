@@ -1,5 +1,7 @@
 using Company.Application.Abstractions;
 using Company.Application.Features.CompanyFeatures.Repositories;
+using Company.Application.Features.SiteSettings.Repositories;
+using Company.Application.Features.StaticPages.Repositories;
 using Company.Application.Features.Products.Repositories;
 using Company.Infrastructure.Identity;
 using Company.Infrastructure.Persistence;
@@ -69,6 +71,12 @@ public static class InfrastructureServiceCollectionExtensions
 
         // ثبت ریپوزیتوری ویژگی شرکت
         services.AddScoped<ICompanyFeatureRepository, CompanyFeatureRepository>();
+
+        // ثبت ریپوزیتوری صفحات ثابت
+        services.AddScoped<IStaticPageRepository, StaticPageRepository>();
+
+        // ثبت ریپوزیتوری تنظیمات سایت
+        services.AddScoped<ISiteSettingRepository, SiteSettingRepository>();
 
         return services;
     }

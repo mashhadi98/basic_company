@@ -1,0 +1,150 @@
+@model Company.Application.Features.SiteSettings.DTOs.CreateOrUpdateSiteSettingDto
+
+@{
+    ViewData["Title"] = "ویرایش تنظیم سایت";
+    ViewData["BreadcrumbParent"] = "تنظیمات سایت";
+    ViewData["BreadcrumbParentUrl"] = Url.Action("Index", "SiteSettings", new { area = "Admin" });
+}
+
+<div class="row">
+    <div class="col-12">
+        <form method="post" asp-action="Edit" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">ویرایش تنظیم سایت</h3>
+                        </div>
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="mb-3">
+                                <label asp-for="Key" class="form-label">کلید (Key) *</label>
+                                <input asp-for="Key" class="form-control" placeholder="مثال: CompanyLogo, CompanyName" dir="ltr" />
+                                <span asp-validation-for="Key" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Type" class="form-label">نوع *</label>
+                                <select asp-for="Type" class="form-control" id="typeSelect">
+                                    <option value="0">متن</option>
+                                    <option value="1">عدد</option>
+                                    <option value="2">تصویر</option>
+                                    <option value="3">ویدیو</option>
+                                    <option value="4">ZIP</option>
+                                    <option value="5">فایل</option>
+                                </select>
+                                <span asp-validation-for="Type" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3" id="valueContainer">
+                                <label class="form-label">مقدار *</label>
+                                <textarea asp-for="Value" class="form-control" rows="4" placeholder="مقدار را وارد کنید"></textarea>
+                                <span asp-validation-for="Value" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3" id="fileContainer" style="display: none;">
+                                <label class="form-label">فایل (برای تغییر آپلود کنید)</label>
+                                <input type="file" id="FileUpload" name="FileUpload" class="form-control" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="SortOrder" class="form-label">ترتیب نمایش</label>
+                                <input asp-for="SortOrder" type="number" class="form-control" min="0" />
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input asp-for="IsPublished" class="form-check-input" />
+                                    <label asp-for="IsPublished" class="form-check-label">منتشر شود</label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">بروزرسانی</button>
+                                <a class="btn btn-secondary" href="/Admin/SiteSettings">بازگشت</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">پیش‌نمایش</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="preview" class="border rounded p-3 text-center">
+                                @if (Model.Type == Company.Domain.Entities.SiteSettingType.Image)
+                                {
+                                    <img src="@Model.Value" style="max-width: 100%; max-height: 200px;" />
+                                }
+                                else if (Model.Type == Company.Domain.Entities.SiteSettingType.Video)
+                                {
+                                    <p><i class="fas fa-video"></i><br/>ویدیو</p>
+                                }
+                                else if (Model.Type == Company.Domain.Entities.SiteSettingType.Zip || Model.Type == Company.Domain.Entities.SiteSettingType.File)
+                                {
+                                    <p><i class="fas fa-file"></i><br/>فایل</p>
+                                }
+                                else
+                                {
+                                    <p class="text-muted">@(Model.Value.Length > 100 ? Model.Value.Substring(0, 100) + "..." : Model.Value)</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('typeSelect')?.addEventListener('change', function() {
+            const type = parseInt(this.value);
+            const valueContainer = document.getElementById('valueContainer');
+            const fileContainer = document.getElementById('fileContainer');
+            const valueTextarea = valueContainer?.querySelector('textarea');
+
+            if (type === 2 || type === 3 || type === 4 || type === 5) {
+                valueContainer.style.display = 'none';
+                fileContainer.style.display = 'block';
+            } else {
+                valueContainer.style.display = 'block';
+                fileContainer.style.display = 'none';
+                
+                if (type === 1) {
+                    valueTextarea.type = 'number';
+                    valueTextarea.placeholder = 'عدد را وارد کنید';
+                } else {
+                    valueTextarea.type = 'text';
+                    valueTextarea.placeholder = 'مقدار را وارد کنید';
+                }
+            }
+        });
+
+        document.getElementById('FileUpload')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const preview = document.getElementById('preview');
+            const type = parseInt(document.getElementById('typeSelect').value);
+
+            if (type === 2) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    preview.innerHTML = `<img src="${event.target.result}" style="max-width: 100%; max-height: 200px;" />`;
+                };
+                reader.readAsDataURL(file);
+            } else if (type === 3 || type === 4 || type === 5) {
+                preview.innerHTML = `<p><i class="fas fa-file"></i><br/>${file.name}</p>`;
+            }
+        });
+
+        // Initialize on page load
+        document.getElementById('typeSelect')?.dispatchEvent(new Event('change'));
+    </script>
+}

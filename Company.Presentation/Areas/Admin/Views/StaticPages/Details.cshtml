@@ -1,0 +1,116 @@
+@model Company.Application.Features.StaticPages.DTOs.StaticPageDto
+
+@{
+    ViewData["Title"] = Model?.Title ?? "جزئیات صفحه ثابت";
+    ViewData["BreadcrumbParent"] = "صفحات ثابت";
+    ViewData["BreadcrumbParentUrl"] = Url.Action("Index", "StaticPages", new { area = "Admin" });
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">جزئیات صفحهٔ ثابت</h3>
+                @if (Model != null)
+                {
+                    <a class="btn btn-primary ms-auto" href="/Admin/StaticPages/Edit/@Model.Id">ویرایش</a>
+                }
+            </div>
+            <div class="card-body">
+                @if (Model != null)
+                {
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>کلید:</strong>
+                            <p><code>@Model.Key</code></p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>وضعیت:</strong>
+                            <p>
+                                @if (Model.IsPublished)
+                                {
+                                    <span class="badge bg-success">منتشر شده</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">پیش‌نویس</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong>عنوان:</strong>
+                            <p>@Model.Title</p>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Image))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <strong>تصویر:</strong>
+                                <div>
+                                    <img src="@Model.Image" alt="@Model.Title" style="max-width: 400px; max-height: 400px; border-radius: 4px;" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong>خلاصه:</strong>
+                            <p>@Model.Summary</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong>توضیحات:</strong>
+                            <div>@Html.Raw(Model.Description)</div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>تاریخ ایجاد:</strong>
+                            <p>@Model.CreatedAt.ToShortDateString()</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>تاریخ آخرین ویرایش:</strong>
+                            <p>@(Model.UpdatedAt.HasValue ? Model.UpdatedAt.Value.ToShortDateString() : "بدون ویرایش")</p>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        صفحهٔ ثابتی یافت نشد.
+                    </div>
+                }
+            </div>
+            <div class="card-footer">
+                <a href="/Admin/StaticPages" class="btn btn-secondary">بازگشت</a>
+                @if (Model != null)
+                {
+                    <form method="post" action="/Admin/StaticPages/TogglePublish/@Model.Id" style="display: inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-@(Model.IsPublished ? "warning" : "success")">
+                            <i class="fas fa-@(Model.IsPublished ? "eye-slash" : "eye")"></i>
+                            @(Model.IsPublished ? "لغو انتشار" : "انتشار")
+                        </button>
+                    </form>
+                    <form method="post" action="/Admin/StaticPages/Delete/@Model.Id" style="display: inline;" onsubmit="return confirm('آیا مطمئن هستید که می‌خواهید این صفحه را حذف کنید؟');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                            حذف
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>

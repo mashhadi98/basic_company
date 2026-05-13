@@ -1,0 +1,94 @@
+@model List<Company.Application.Features.StaticPages.DTOs.StaticPageDto>
+
+@{
+    ViewData["Title"] = "صفحات ثابت";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">لیست صفحات ثابت</h3>
+                <a class="btn btn-primary ms-auto" href="/Admin/StaticPages/Create">ایجاد صفحه</a>
+            </div>
+            <div class="card-body">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle"></i>
+                        @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-circle"></i>
+                        @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>کلید</th>
+                                    <th>عنوان</th>
+                                    <th>خلاصه</th>
+                                    <th>تصویر</th>
+                                    <th>وضعیت</th>
+                                    <th style="width: 240px;">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td><code>@item.Key</code></td>
+                                        <td>@item.Title</td>
+                                        <td>@(item.Summary.Length > 40 ? item.Summary.Substring(0, 40) + "..." : item.Summary)</td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(item.Image))
+                                            {
+                                                <img src="@item.Image" alt="@item.Title" style="max-width: 50px; max-height: 50px; border-radius: 4px;" />
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">بدون تصویر</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.IsPublished)
+                                            {
+                                                <span class="badge bg-success">منتشر شده</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">پیش‌نویس</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-info" href="/Admin/StaticPages/Details/@item.Id">جزئیات</a>
+                                            <a class="btn btn-sm btn-outline-primary" href="/Admin/StaticPages/Edit/@item.Id">ویرایش</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle"></i>
+                        هیچ صفحهٔ ثابتی یافت نشد.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

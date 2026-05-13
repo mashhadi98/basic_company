@@ -90,6 +90,54 @@
                     </li>
                 </ul>
             </li>
+            <!-- صفحات -->
+            <li class="nav-item @Html.IsMenuOpen("StaticPages")">
+                <a href="#" class="nav-link @Html.IsActive("StaticPages")">
+                    <i class="nav-icon fas fa-box"></i>
+                    <p>
+                        صفحات
+                        <i class="nav-arrow bi bi-chevron-right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="/Admin/StaticPages" class="nav-link @Html.IsActive("StaticPages", "Index")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>لیست صفحات</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/Admin/StaticPages/Create" class="nav-link @Html.IsActive("StaticPages", "Create")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>ایجاد صفحات جدید</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <!-- تنظیمات سایت -->
+            <li class="nav-item @Html.IsMenuOpen("SiteSettings")">
+                <a href="#" class="nav-link @Html.IsActive("SiteSettings")">
+                    <i class="nav-icon fas fa-cog"></i>
+                    <p>
+                        تنظیمات سایت
+                        <i class="nav-arrow bi bi-chevron-right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="/Admin/SiteSettings" class="nav-link @Html.IsActive("SiteSettings", "Index")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>لیست تنظیمات</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/Admin/SiteSettings/Create" class="nav-link @Html.IsActive("SiteSettings", "Create")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>ایجاد تنظیم جدید</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
 
             <!-- کاربران -->

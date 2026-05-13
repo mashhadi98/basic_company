@@ -161,6 +161,7 @@ public class ProductsController : Controller
             Attributes = product.Attributes
                 .Select(a => new CreateOrUpdateProductAttributeDto
                 {
+                    Id = a.Id,
                     Key = a.Key,
                     Value = a.Value,
                     SortOrder = a.SortOrder

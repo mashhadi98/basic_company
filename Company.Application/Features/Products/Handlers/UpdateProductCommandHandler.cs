@@ -9,16 +9,13 @@ namespace Company.Application.Features.Products.Handlers;
 public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, ProductDto>
 {
     private readonly IProductRepository _productRepository;
-    private readonly IProductAttributeRepository _attributeRepository;
     private readonly IProductCategoryRepository _categoryRepository;
 
     public UpdateProductCommandHandler(
         IProductRepository productRepository,
-        IProductAttributeRepository attributeRepository,
         IProductCategoryRepository categoryRepository)
     {
         _productRepository = productRepository;
-        _attributeRepository = attributeRepository;
         _categoryRepository = categoryRepository;
     }
 
@@ -26,7 +23,6 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
     {
         var dto = request.ProductData;
 
-        // دریافت محصول
         var product = await _productRepository.GetByIdAsync(request.ProductId, cancellationToken);
         if (product == null)
             throw new InvalidOperationException($"محصول با شناسه {request.ProductId} یافت نشد.");
@@ -39,7 +35,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
                 throw new InvalidOperationException("دسته‌بندی محصول یافت نشد.");
         }
 
-        // به‌روزرسانی محصول
+        // به‌روزرسانی فیلدهای اصلی محصول
         product.Title = dto.Title;
         product.Slug = dto.Slug;
         product.ShortDescription = dto.ShortDescription;
@@ -57,11 +53,17 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         product.CatalogPdfFile = dto.CatalogPdfFile;
         product.VideoUrl = dto.VideoUrl;
 
-        await _productRepository.UpdateAsync(product, cancellationToken);
+        // آپدیت کامل (محصول + Attributes)
+        await _productRepository.UpdateWithAttributesAsync(product, dto.Attributes.Select(x => new ProductAttributeDto
+        {
+            Id = x.Id,
+            Key = x.Key,
+            Value = x.Value,
+            SortOrder = x.SortOrder
+        }).ToList(), cancellationToken);
 
         return MapToDto(product);
     }
-
     private ProductDto MapToDto(Product product)
     {
         return new ProductDto

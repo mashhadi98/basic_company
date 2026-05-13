@@ -65,6 +65,8 @@
                                 <span asp-validation-for="FullDescription" class="text-danger"></span>
                             </div>
 
+                            @await Html.PartialAsync("_ProductAttributes", Model)
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-check mb-3">

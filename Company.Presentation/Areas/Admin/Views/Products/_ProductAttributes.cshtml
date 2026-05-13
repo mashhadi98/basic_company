@@ -1,0 +1,131 @@
+@model Company.Presentation.Areas.Admin.Models.ProductViewModel
+
+<div class="card mb-3">
+    <div class="card-header">
+        <h3 class="card-title">ویژگی‌های محصول</h3>
+    </div>
+    <div class="card-body">
+        <p class="text-muted">در اینجا می‌توانید ویژگی‌های محصول را اضافه، ویرایش یا حذف کنید.</p>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm" id="attributesTable">
+                <thead>
+                    <tr>
+                        <th>کلید</th>
+                        <th>مقدار</th>
+                        <th>ترتیب</th>
+                        <th class="text-center">عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.Attributes.Count; i++)
+                    {
+                        <tr class="attribute-row">
+                            <td>
+                                <input type="hidden" class="attribute-id" name="Attributes[@i].Id" value="@(Model.Attributes[i].Id?.ToString() ?? string.Empty)" />
+                                <input type="text" class="form-control attribute-key" name="Attributes[@i].Key" value="@Model.Attributes[i].Key" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control attribute-value" name="Attributes[@i].Value" value="@Model.Attributes[i].Value" />
+                            </td>
+                            <td>
+                                <input type="number" min="0" class="form-control attribute-sortorder" name="Attributes[@i].SortOrder" value="@Model.Attributes[i].SortOrder" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <button type="button" class="btn btn-danger btn-sm remove-attribute-button">حذف</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <button type="button" class="btn btn-outline-primary" id="addAttributeButton">افزودن ویژگی جدید</button>
+
+        <template id="attributeRowTemplate">
+            <tr class="attribute-row">
+                <td>
+                    <input type="hidden" class="attribute-id" name="Attributes[0].Id" value="" />
+                    <input type="text" class="form-control attribute-key" name="Attributes[0].Key" value="" />
+                </td>
+                <td>
+                    <input type="text" class="form-control attribute-value" name="Attributes[0].Value" value="" />
+                </td>
+                <td>
+                    <input type="number" min="0" class="form-control attribute-sortorder" name="Attributes[0].SortOrder" value="0" />
+                </td>
+                <td class="text-center align-middle">
+                    <button type="button" class="btn btn-danger btn-sm remove-attribute-button">حذف</button>
+                </td>
+            </tr>
+        </template>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const attributesTableBody = document.querySelector('#attributesTable tbody');
+        const addAttributeButton = document.getElementById('addAttributeButton');
+        const rowTemplate = document.getElementById('attributeRowTemplate').content.firstElementChild;
+
+        function updateAttributeIndexes() {
+            const rows = attributesTableBody.querySelectorAll('.attribute-row');
+            rows.forEach((row, index) => {
+                row.querySelectorAll('input').forEach(input => {
+                    if (input.classList.contains('attribute-id')) {
+                        input.name = `Attributes[${index}].Id`;
+                    }
+                    if (input.classList.contains('attribute-key')) {
+                        input.name = `Attributes[${index}].Key`;
+                    }
+                    if (input.classList.contains('attribute-value')) {
+                        input.name = `Attributes[${index}].Value`;
+                    }
+                    if (input.classList.contains('attribute-sortorder')) {
+                        input.name = `Attributes[${index}].SortOrder`;
+                    }
+                });
+            });
+        }
+
+        function removeAttributeRow(button) {
+            const row = button.closest('.attribute-row');
+            if (!row) return;
+            row.remove();
+            updateAttributeIndexes();
+        }
+
+        function addAttributeRow(id, key, value, sortOrder) {
+            const row = rowTemplate.cloneNode(true);
+            const idInput = row.querySelector('.attribute-id');
+            const keyInput = row.querySelector('.attribute-key');
+            const valueInput = row.querySelector('.attribute-value');
+            const sortOrderInput = row.querySelector('.attribute-sortorder');
+            const removeButton = row.querySelector('.remove-attribute-button');
+
+            idInput.value = id || '';
+            keyInput.value = key || '';
+            valueInput.value = value || '';
+            sortOrderInput.value = sortOrder !== undefined && sortOrder !== null ? sortOrder : 0;
+
+            removeButton.addEventListener('click', function () {
+                removeAttributeRow(this);
+            });
+
+            attributesTableBody.appendChild(row);
+            updateAttributeIndexes();
+        }
+
+        addAttributeButton?.addEventListener('click', function () {
+            addAttributeRow('', '', '', 0);
+        });
+
+        attributesTableBody.querySelectorAll('.remove-attribute-button').forEach(button => {
+            button.addEventListener('click', function () {
+                removeAttributeRow(this);
+            });
+        });
+
+        updateAttributeIndexes();
+    })();
+</script>

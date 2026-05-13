@@ -12,6 +12,10 @@ public class ProductAttributeConfiguration : IEntityTypeConfiguration<ProductAtt
 
         builder.HasKey(pa => pa.Id);
 
+        // خیلی مهم برای Guid
+        builder.Property(pa => pa.Id)
+               .ValueGeneratedNever();           // EF خودش Id جدید تولید نکنه، ما خودمون Guid می‌دیم
+
         builder.Property(pa => pa.Key)
             .HasMaxLength(256)
             .IsRequired();

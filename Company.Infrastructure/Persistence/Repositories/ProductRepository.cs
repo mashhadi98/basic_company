@@ -1,3 +1,4 @@
+using Company.Application.Features.Products.DTOs;
 using Company.Application.Features.Products.Repositories;
 using Company.Domain.Entities;
 using Company.Infrastructure.Persistence;
@@ -12,6 +13,60 @@ public class ProductRepository : IProductRepository
     public ProductRepository(AppDbContext context)
     {
         _context = context;
+    }
+    public async Task UpdateWithAttributesAsync(Product product,
+        List<ProductAttributeDto> attributeDtos,
+        CancellationToken cancellationToken = default)
+    {
+        product.UpdatedAt = DateTime.UtcNow;
+
+        if (attributeDtos != null && attributeDtos.Any())
+        {
+            var incomingIds = attributeDtos
+                .Where(a => a.Id.HasValue)
+                .Select(a => a.Id!.Value)
+                .ToHashSet();
+
+            // حذف атрибутهای اضافی
+            var attributesToRemove = product.Attributes
+                .Where(a => !incomingIds.Contains(a.Id))
+                .ToList();
+
+            foreach (var attr in attributesToRemove)
+            {
+                _context.ProductAttributes.Remove(attr);
+            }
+
+            // به‌روزرسانی و افزودن جدید (مهم: مستقیم روی DbSet)
+            foreach (var attrDto in attributeDtos)
+            {
+                if (attrDto.Id.HasValue)
+                {
+                    var existing = product.Attributes.FirstOrDefault(a => a.Id == attrDto.Id.Value);
+                    if (existing != null)
+                    {
+                        existing.Key = attrDto.Key;
+                        existing.Value = attrDto.Value;
+                        existing.SortOrder = attrDto.SortOrder;
+                        continue;
+                    }
+                }
+
+                // افزودن مستقیم به DbSet (بهترین روش در این سناریو)
+                var newAttribute = new ProductAttribute
+                {
+                    ProductId = product.Id,
+                    Key = attrDto.Key,
+                    Value = attrDto.Value,
+                    SortOrder = attrDto.SortOrder
+                };
+
+                _context.ProductAttributes.Add(newAttribute);   // ← تغییر کلیدی اینجا
+            }
+        }
+
+        // فقط یک SaveChanges
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
@@ -67,7 +122,8 @@ public class ProductRepository : IProductRepository
     public async Task UpdateAsync(Product product, CancellationToken cancellationToken = default)
     {
         product.UpdatedAt = DateTime.UtcNow;
-        _context.Products.Update(product);
+
+        // هیچ Update() اضافی نزنیم — موجودیت قبلاً Track شده
         await _context.SaveChangesAsync(cancellationToken);
     }
 

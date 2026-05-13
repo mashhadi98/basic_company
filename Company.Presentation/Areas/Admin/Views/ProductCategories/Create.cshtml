@@ -1,0 +1,146 @@
+@model Company.Presentation.Areas.Admin.Models.ProductCategoryViewModel
+
+@{
+    ViewData["Title"] = "ایجاد دسته‌بندی";
+    ViewData["BreadcrumbParent"] = "دسته‌بندی محصولات";
+    ViewData["BreadcrumbParentUrl"] = Url.Action("Index", "ProductCategories", new { area = "Admin" });
+}
+
+<div class="row">
+    <div class="col-12">
+
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">ویرایش دسته‌بندی</h3>
+                        </div>
+                        <div class="card-body">
+                            @Html.AntiForgeryToken()
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="mb-3">
+                                <label asp-for="Title" class="form-label">عنوان *</label>
+                                <input asp-for="Title" class="form-control" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label asp-for="Slug" class="form-label">Slug *</label>
+                                <input asp-for="Slug" class="form-control" dir="ltr" placeholder="مثال: product-category" />
+                                <span asp-validation-for="Slug" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="ParentCategoryId" class="form-label">دسته‌بندی والد</label>
+                                <select asp-for="ParentCategoryId" class="form-control">
+                                    <option value="">-- ندارد --</option>
+                                    @if (ViewBag.ParentCategories != null)
+                                    {
+                                        foreach (var parent in (List<Company.Application.Features.Products.DTOs.ProductCategoryDto>)ViewBag.ParentCategories)
+                                        {
+                                            var selected = parent.Id == Model.ParentCategoryId ? "selected" : string.Empty;
+                                            <option value="@parent.Id" selected="@selected">@parent.Title</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label">توضیحات</label>
+                                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="SortOrder" class="form-label">ترتیب نمایش</label>
+                                    <input asp-for="SortOrder" class="form-control" type="number" min="0" />
+                                    <span asp-validation-for="SortOrder" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check mt-4">
+                                        <input asp-for="IsPublished" class="form-check-input" />
+                                        <label asp-for="IsPublished" class="form-check-label">منتشر شده</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="SeoMetaTitle" class="form-label">عنوان SEO</label>
+                                <input asp-for="SeoMetaTitle" class="form-control" />
+                                <span asp-validation-for="SeoMetaTitle" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="SeoMetaDescription" class="form-label">توضیحات SEO</label>
+                                <textarea asp-for="SeoMetaDescription" class="form-control" rows="2"></textarea>
+                                <span asp-validation-for="SeoMetaDescription" class="text-danger"></span>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">ذخیره</button>
+                                <a class="btn btn-secondary" href="/Admin/ProductCategories">بازگشت</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card card-outline card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title">تصویر دسته‌بندی</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">آپلود تصویر</label>
+                                <input asp-for="CategoryImageFile" id="categoryImageFile" type="file" accept="image/*" class="form-control" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Image" class="form-label">آدرس تصویر</label>
+                                <input asp-for="Image" class="form-control" placeholder="مثال: /images/categories/product-category.jpg" />
+                                <span asp-validation-for="Image" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">پیش‌نمایش تصویر</label>
+                                <div class="border rounded p-2 text-center">
+                                    <img id="categoryImagePreview" src="@(string.IsNullOrWhiteSpace(Model.Image) ? "" : Model.Image)" class="img-fluid" alt="پیش‌نمایش تصویر" style="max-height:240px; width:auto; display:@(string.IsNullOrWhiteSpace(Model.Image) ? "none" : "inline-block")" />
+                                    <div id="categoryImagePlaceholder" class="text-muted" style="display:@(string.IsNullOrWhiteSpace(Model.Image) ? "block" : "none")">هنوز تصویری انتخاب نشده است.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('categoryImageFile')?.addEventListener('change', function (event) {
+            const input = event.target;
+            const preview = document.getElementById('categoryImagePreview');
+            const placeholder = document.getElementById('categoryImagePlaceholder');
+            if (!input.files || input.files.length === 0) {
+                if (preview) preview.style.display = 'none';
+                if (placeholder) placeholder.style.display = 'block';
+                return;
+            }
+
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                if (preview) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'inline-block';
+                }
+                if (placeholder) placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        });
+    </script>
+}

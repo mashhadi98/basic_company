@@ -1,9 +1,14 @@
 using Company.Application.Features.Products.Commands;
 using Company.Application.Features.Products.DTOs;
 using Company.Application.Features.Products.Queries;
+using Company.Presentation.Areas.Admin.Models;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using System.Linq;
 
 namespace Company.Presentation.Areas.Admin.Controllers;
 
@@ -12,10 +17,12 @@ namespace Company.Presentation.Areas.Admin.Controllers;
 public class ProductsController : Controller
 {
     private readonly IMediator _mediator;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public ProductsController(IMediator mediator)
+    public ProductsController(IMediator mediator, IWebHostEnvironment webHostEnvironment)
     {
         _mediator = mediator;
+        _webHostEnvironment = webHostEnvironment;
     }
 
     /// <summary>
@@ -50,7 +57,7 @@ public class ProductsController : Controller
     {
         var categories = await _mediator.Send(new GetProductCategoriesQuery { IsPublished = true });
         ViewBag.Categories = categories;
-        return View(new CreateOrUpdateProductDto());
+        return View(new ProductViewModel());
     }
 
     /// <summary>
@@ -58,14 +65,55 @@ public class ProductsController : Controller
     /// </summary>
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CreateOrUpdateProductDto dto)
+    public async Task<IActionResult> Create(ProductViewModel model)
     {
+        if (model.MainImageFile != null && model.MainImageFile.Length > 0)
+        {
+            var imagePath = await SaveProductImageAsync(model.MainImageFile, "main");
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                model.MainImage = imagePath;
+            }
+        }
+
+        if (model.ThumbnailImageFile != null && model.ThumbnailImageFile.Length > 0)
+        {
+            var imagePath = await SaveProductImageAsync(model.ThumbnailImageFile, "thumbnail");
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                model.ThumbnailImage = imagePath;
+            }
+        }
+
         if (!ModelState.IsValid)
         {
             var categories = await _mediator.Send(new GetProductCategoriesQuery { IsPublished = true });
             ViewBag.Categories = categories;
-            return View(dto);
+            return View(model);
         }
+
+        var dto = new CreateOrUpdateProductDto
+        {
+            Title = model.Title,
+            Slug = model.Slug,
+            ShortDescription = model.ShortDescription,
+            FullDescription = model.FullDescription,
+            MainImage = model.MainImage,
+            CategoryId = model.CategoryId,
+            IsFeatured = model.IsFeatured,
+            PublishStatus = model.PublishStatus,
+            SortOrder = model.SortOrder,
+            SeoMetaTitle = model.SeoMetaTitle,
+            SeoMetaDescription = model.SeoMetaDescription,
+            SeoKeywords = model.SeoKeywords,
+            CanonicalUrl = model.CanonicalUrl,
+            ThumbnailImage = model.ThumbnailImage,
+            CatalogPdfFile = model.CatalogPdfFile,
+            VideoUrl = model.VideoUrl,
+            Attributes = model.Attributes,
+            GalleryImages = model.GalleryImages,
+            Tags = model.Tags
+        };
 
         try
         {
@@ -78,7 +126,7 @@ public class ProductsController : Controller
             ModelState.AddModelError("", ex.Message);
             var categories = await _mediator.Send(new GetProductCategoriesQuery { IsPublished = true });
             ViewBag.Categories = categories;
-            return View(dto);
+            return View(model);
         }
     }
 
@@ -92,7 +140,7 @@ public class ProductsController : Controller
         if (product == null)
             return NotFound();
 
-        var dto = new CreateOrUpdateProductDto
+        var model = new ProductViewModel
         {
             Title = product.Title,
             Slug = product.Slug,
@@ -124,7 +172,7 @@ public class ProductsController : Controller
         ViewBag.Categories = categories;
         ViewBag.ProductId = id;
 
-        return View(dto);
+        return View(model);
     }
 
     /// <summary>
@@ -132,15 +180,56 @@ public class ProductsController : Controller
     /// </summary>
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Guid id, CreateOrUpdateProductDto dto)
+    public async Task<IActionResult> Edit(Guid id, ProductViewModel model)
     {
+        if (model.MainImageFile != null && model.MainImageFile.Length > 0)
+        {
+            var imagePath = await SaveProductImageAsync(model.MainImageFile, "main");
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                model.MainImage = imagePath;
+            }
+        }
+
+        if (model.ThumbnailImageFile != null && model.ThumbnailImageFile.Length > 0)
+        {
+            var imagePath = await SaveProductImageAsync(model.ThumbnailImageFile, "thumbnail");
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                model.ThumbnailImage = imagePath;
+            }
+        }
+
         if (!ModelState.IsValid)
         {
             var categories = await _mediator.Send(new GetProductCategoriesQuery());
             ViewBag.Categories = categories;
             ViewBag.ProductId = id;
-            return View(dto);
+            return View(model);
         }
+
+        var dto = new CreateOrUpdateProductDto
+        {
+            Title = model.Title,
+            Slug = model.Slug,
+            ShortDescription = model.ShortDescription,
+            FullDescription = model.FullDescription,
+            MainImage = model.MainImage,
+            CategoryId = model.CategoryId,
+            IsFeatured = model.IsFeatured,
+            PublishStatus = model.PublishStatus,
+            SortOrder = model.SortOrder,
+            SeoMetaTitle = model.SeoMetaTitle,
+            SeoMetaDescription = model.SeoMetaDescription,
+            SeoKeywords = model.SeoKeywords,
+            CanonicalUrl = model.CanonicalUrl,
+            ThumbnailImage = model.ThumbnailImage,
+            CatalogPdfFile = model.CatalogPdfFile,
+            VideoUrl = model.VideoUrl,
+            Attributes = model.Attributes,
+            GalleryImages = model.GalleryImages,
+            Tags = model.Tags
+        };
 
         try
         {
@@ -154,8 +243,38 @@ public class ProductsController : Controller
             var categories = await _mediator.Send(new GetProductCategoriesQuery());
             ViewBag.Categories = categories;
             ViewBag.ProductId = id;
-            return View(dto);
+            return View(model);
         }
+    }
+
+    private async Task<string?> SaveProductImageAsync(IFormFile productImageFile, string type)
+    {
+        if (productImageFile == null || productImageFile.Length == 0)
+            return null;
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp" };
+        var extension = Path.GetExtension(productImageFile.FileName)?.ToLowerInvariant();
+        if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
+        {
+            ModelState.AddModelError(string.Empty, "نوع فایل تصویر معتبر نیست. لطفاً یک فایل JPG، PNG، GIF یا WEBP انتخاب کنید.");
+            return null;
+        }
+
+        var imagesFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "products");
+        if (!Directory.Exists(imagesFolder))
+        {
+            Directory.CreateDirectory(imagesFolder);
+        }
+
+        var fileName = $"product-{type}-{Guid.NewGuid()}{extension}";
+        var filePath = Path.Combine(imagesFolder, fileName);
+
+        await using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await productImageFile.CopyToAsync(stream);
+        }
+
+        return $"/images/products/{fileName}";
     }
 
     /// <summary>

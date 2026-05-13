@@ -38,6 +38,8 @@ public class GetProductCategoriesQueryHandler : IRequestHandler<GetProductCatego
 
     private List<ProductCategoryDto> MapToDtos(List<Domain.Entities.ProductCategory> categories)
     {
+        var idToTitle = categories.ToDictionary(c => c.Id, c => c.Title);
+
         return categories.Select(c => new ProductCategoryDto
         {
             Id = c.Id,
@@ -45,6 +47,9 @@ public class GetProductCategoriesQueryHandler : IRequestHandler<GetProductCatego
             Slug = c.Slug,
             Description = c.Description,
             ParentCategoryId = c.ParentCategoryId,
+            ParentCategoryTitle = c.ParentCategoryId.HasValue && idToTitle.TryGetValue(c.ParentCategoryId.Value, out var parentTitle)
+                ? parentTitle
+                : null,
             Image = c.Image,
             SortOrder = c.SortOrder,
             IsPublished = c.IsPublished,

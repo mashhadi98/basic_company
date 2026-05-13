@@ -11,6 +11,12 @@
                 <h3 class="card-title">لیست دسته‌بندی‌ها</h3>
                 <a class="btn btn-primary ms-auto" href="/Admin/ProductCategories/Create">ایجاد دسته جدید</a>
             </div>
+            <div class="card-body">
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                }
+            </div>
             <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap mb-0">
                     <thead>
@@ -21,13 +27,14 @@
                             <th>والد</th>
                             <th>اولویت</th>
                             <th>وضعیت انتشار</th>
+                            <th>عملیات</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if (Model.Count == 0)
                         {
                             <tr>
-                                <td colspan="6" class="text-center py-4">دسته‌بندی‌ای ثبت نشده است.</td>
+                                <td colspan="7" class="text-center py-4">دسته‌بندی‌ای ثبت نشده است.</td>
                             </tr>
                         }
                         else
@@ -39,12 +46,21 @@
                                     <td>@index</td>
                                     <td>@category.Title</td>
                                     <td>@category.Slug</td>
-                                    <td>@(category.ParentCategoryId.HasValue ? category.ParentCategoryId.ToString() : "-" )</td>
+                                    <td>@(category.ParentCategoryTitle ?? "-")</td>
                                     <td>@category.SortOrder</td>
                                     <td>
                                         <span class="badge @(category.IsPublished ? "bg-success" : "bg-secondary")">
                                             @(category.IsPublished ? "منتشر شده" : "پیش‌نویس")
                                         </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <a class="btn btn-sm btn-outline-primary" href="/Admin/ProductCategories/Edit/@category.Id">ویرایش</a>
+                                            <form asp-action="Delete" asp-route-id="@category.Id" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('آیا از حذف این دسته‌بندی مطمئن هستید؟');">حذف</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 index++;

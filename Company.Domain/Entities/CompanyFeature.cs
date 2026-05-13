@@ -12,4 +12,10 @@ public class CompanyFeature : BaseEntity
     public string Icon { get; set; } = string.Empty; // کلاس آیکون مثل fa-solid fa-star
     public int SortOrder { get; set; }
     public bool IsPublished { get; set; }
+
+    // Audit Information
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public string? CreatedBy { get; set; }
+    public string? UpdatedBy { get; set; }
 }

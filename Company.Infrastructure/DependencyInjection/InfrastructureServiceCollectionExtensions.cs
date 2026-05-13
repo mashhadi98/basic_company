@@ -1,4 +1,5 @@
 using Company.Application.Abstractions;
+using Company.Application.Features.CompanyFeatures.Repositories;
 using Company.Application.Features.Products.Repositories;
 using Company.Infrastructure.Identity;
 using Company.Infrastructure.Persistence;
@@ -65,6 +66,9 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IProductAttributeRepository, ProductAttributeRepository>();
         services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+
+        // ثبت ریپوزیتوری ویژگی شرکت
+        services.AddScoped<ICompanyFeatureRepository, CompanyFeatureRepository>();
 
         return services;
     }

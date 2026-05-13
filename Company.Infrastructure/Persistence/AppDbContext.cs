@@ -21,6 +21,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<ProductAttribute> ProductAttributes => Set<ProductAttribute>();
     public DbSet<ProductGallery> ProductGalleries => Set<ProductGallery>();
     public DbSet<ProductTag> ProductTags => Set<ProductTag>();
+    public DbSet<CompanyFeature> CompanyFeatures => Set<CompanyFeature>();
 
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();

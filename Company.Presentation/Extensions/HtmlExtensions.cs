@@ -2,10 +2,10 @@
 
 public static class HtmlExtensions
 {
-    public static string IsActive(this IHtmlHelper html, string controller, string action = null)
+    public static string IsActive(this IHtmlHelper html, string controller, string? action = null)
     {
-        var currentController = html.ViewContext.RouteData.Values["controller"]?.ToString();
-        var currentAction = html.ViewContext.RouteData.Values["action"]?.ToString();
+        string? currentController = html.ViewContext.RouteData.Values["controller"]?.ToString();
+        string? currentAction = html.ViewContext.RouteData.Values["action"]?.ToString();
 
         if (string.IsNullOrEmpty(action))
             return currentController == controller ? "active" : "";
@@ -20,9 +20,9 @@ public static class HtmlExtensions
         return currentController == controller && currentAction == action ? "active" : "";
     }
 
-    public static string IsMenuOpen(this IHtmlHelper html, string controller)
+    public static string IsMenuOpen(this IHtmlHelper html, params string[] controllers)
     {
         var currentController = html.ViewContext.RouteData.Values["controller"]?.ToString();
-        return currentController == controller ? "menu-open" : "";
+        return controllers.Any(controller => string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase)) ? "menu-open" : "";
     }
 }

@@ -1,5 +1,3 @@
-using System.Text;
-using System.Text.Encodings.Web;
 using Company.Infrastructure.Persistence.Identity;
 using Company.Presentation.Models.Account;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace Company.Presentation.Controllers;
 
@@ -143,6 +144,10 @@ public sealed class AccountController : Controller
 
         if (result.Succeeded)
         {
+            // ====================== اضافه کردن Claim FullName ======================
+            await AddFullNameClaimAsync(user);
+            // =====================================================================
+
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
@@ -156,7 +161,6 @@ public sealed class AccountController : Controller
             ModelState.AddModelError(string.Empty, "حساب موقتاً قفل شده است.");
             return View(model);
         }
-
         if (result.IsNotAllowed)
         {
             ModelState.AddModelError(string.Empty, "ابتدا ایمیل خود را تأیید کنید.");
@@ -165,6 +169,29 @@ public sealed class AccountController : Controller
 
         ModelState.AddModelError(string.Empty, "نام کاربری یا رمز عبور نادرست است.");
         return View(model);
+    }
+
+    private async Task AddFullNameClaimAsync(ApplicationUser user)
+    {
+        // حذف Claim قبلی اگر وجود داشته باشد
+        var existingClaims = await _userManager.GetClaimsAsync(user);
+        var fullNameClaim = existingClaims.FirstOrDefault(c => c.Type == "FullName");
+
+        if (fullNameClaim != null)
+        {
+            await _userManager.RemoveClaimAsync(user, fullNameClaim);
+        }
+
+        // اضافه کردن Claim جدید
+        var fullName = $"{user.FirstName} {user.LastName}".Trim();
+        if (!string.IsNullOrWhiteSpace(fullName))
+        {
+            await _userManager.AddClaimAsync(user, new Claim("FullName", fullName));
+        }
+
+        // خروج و ورود مجدد برای اعمال Claimها (مهم!)
+        await _signInManager.SignOutAsync();
+        await _signInManager.SignInAsync(user, isPersistent: false);
     }
 
     [Authorize]

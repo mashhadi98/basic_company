@@ -1,0 +1,142 @@
+@model ProductDto
+@using Company.Application.Features.Products.DTOs
+
+@{
+    ViewData["Title"] = Model?.Title ?? "جزئیات محصول";
+    ViewData["BreadcrumbParent"] = "محصولات";
+    ViewData["BreadcrumbParentUrl"] = Url.Action("Index", "Products", new { area = "Admin" });
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">جزئیات محصول</h3>
+                <a class="btn btn-primary" href="/Admin/Products/Edit/@Model?.Id">ویرایش</a>
+            </div>
+            <div class="card-body">
+                @if (Model != null)
+                {
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>عنوان:</strong>
+                            <p>@Model.Title</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>وضعیت:</strong>
+                            <p>
+                                @if (Model.PublishStatus == "Published")
+                                {
+                                    <span class="badge bg-success">منتشر شده</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">پیش‌نویس</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Slug:</strong>
+                            <p><code>@Model.Slug</code></p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>برجسته:</strong>
+                            <p>
+                                @if (Model.IsFeatured)
+                                {
+                                    <text><i class="fas fa-check text-success"></i> بله</text>
+                                }
+                                else
+                                {
+                                    <text><i class="fas fa-times text-muted"></i> خیر</text>
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong>توضیح کوتاه:</strong>
+                            <p>@Model.ShortDescription</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong>توضیح کامل:</strong>
+                            <div>@Html.Raw(Model.FullDescription)</div>
+                        </div>
+                    </div>
+
+                    @if (Model.Attributes != null && Model.Attributes.Count > 0)
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <strong>ویژگی‌ها:</strong>
+                                <table class="table table-bordered table-sm mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th>کلید</th>
+                                            <th>مقدار</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var attr in Model.Attributes.OrderBy(a => a.SortOrder))
+                                        {
+                                            <tr>
+                                                <td>@attr.Key</td>
+                                                <td>@attr.Value</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.SeoMetaTitle))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <strong>اطلاعات SEO:</strong>
+                                <p><strong>عنوان Meta:</strong> @Model.SeoMetaTitle</p>
+                                <p><strong>توضیح Meta:</strong> @Model.SeoMetaDescription</p>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>تاریخ ایجاد:</strong>
+                            <p>@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</p>
+                            @if (Model.UpdatedAt.HasValue)
+                            {
+                                <strong>آخرین به‌روزرسانی:</strong>
+                                <p>@Model.UpdatedAt?.ToString("yyyy-MM-dd HH:mm")</p>
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            @if (!string.IsNullOrEmpty(Model.CreatedBy))
+                            {
+                                <strong>ایجاد شده توسط:</strong>
+                                <p>@Model.CreatedBy</p>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.UpdatedBy))
+                            {
+                                <strong>ویرایش شده توسط:</strong>
+                                <p>@Model.UpdatedBy</p>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">محصول یافت نشد.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

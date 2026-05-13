@@ -1,7 +1,9 @@
 using Company.Application.Abstractions;
+using Company.Application.Features.Products.Repositories;
 using Company.Infrastructure.Identity;
 using Company.Infrastructure.Persistence;
 using Company.Infrastructure.Persistence.Identity;
+using Company.Infrastructure.Persistence.Repositories;
 using Company.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -58,6 +60,11 @@ public static class InfrastructureServiceCollectionExtensions
 
         services.AddScoped<IUserSecurityStampInvalidator, UserSecurityStampInvalidator>();
         services.AddScoped<IPermissionManagementService, PermissionManagementService>();
+
+        // ثبت ریپوزیتوری‌های محصول
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IProductAttributeRepository, ProductAttributeRepository>();
+        services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
 
         return services;
     }

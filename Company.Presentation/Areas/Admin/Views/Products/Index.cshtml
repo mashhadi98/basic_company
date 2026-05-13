@@ -1,0 +1,80 @@
+@model List<ProductDto>
+@using Company.Application.Features.Products.DTOs
+
+@{
+    ViewData["Title"] = "محصولات";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card card-outline card-primary">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">لیست محصولات</h3>
+                <a class="btn btn-primary ms-auto" href="/Admin/Products/Create">ایجاد محصول</a>
+            </div>
+            <div class="card-body">
+                @if (Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>عنوان</th>
+                                    <th>Slug</th>
+                                    <th>وضعیت</th>
+                                    <th>برجسته</th>
+                                    <th>ویژگی‌ها</th>
+                                    <th style="width: 240px;">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var product in Model)
+                                {
+                                    <tr>
+                                        <td>@product.Title</td>
+                                        <td><code>@product.Slug</code></td>
+                                        <td>
+                                            @if (product.PublishStatus == "Published")
+                                            {
+                                                <span class="badge bg-success">منتشر شده</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">پیش‌نویس</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (product.IsFeatured)
+                                            {
+                                                <i class="fas fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-times text-muted"></i>
+                                            }
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">@product.Attributes.Count</span>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-info" href="/Admin/Products/Details/@product.Id">جزئیات</a>
+                                            <a class="btn btn-sm btn-outline-primary" href="/Admin/Products/Edit/@product.Id">ویرایش</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle"></i>
+                        هیچ محصولی یافت نشد.
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

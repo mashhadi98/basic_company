@@ -1,0 +1,91 @@
+@model List<Company.Application.Features.Blog.DTOs.BlogCommentDto>
+
+@{
+    ViewData["Title"] = "نظرات بلاگ";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">لیست نظرات بلاگ</h3>
+            </div>
+            <div class="card-body">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>نویسنده</th>
+                                <th>ایمیل</th>
+                                <th>کامنت</th>
+                                <th>شناسه مطلب</th>
+                                <th>وضعیت</th>
+                                <th>ایجاد شده</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center py-4">هیچ نظری ثبت نشده است.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                var index = 1;
+                                foreach (var comment in Model)
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@comment.AuthorName</td>
+                                        <td>@comment.AuthorEmail</td>
+                                        <td>@(comment.Content.Length > 80 ? comment.Content.Substring(0, 80) + "..." : comment.Content)</td>
+                                        <td>@comment.BlogPostId</td>
+                                        <td>
+                                            <span class="badge @(comment.IsApproved ? "bg-success" : "bg-secondary")">
+                                                @(comment.IsApproved ? "تایید شده" : "در انتظار")
+                                            </span>
+                                        </td>
+                                        <td>@comment.CreatedAt.ToString("yyyy/MM/dd")</td>
+                                        <td>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                @if (!comment.IsApproved)
+                                                {
+                                                    <form asp-action="Approve" asp-route-id="@comment.Id" method="post" class="d-inline">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-sm btn-outline-success">تایید</button>
+                                                    </form>
+                                                }
+                                                <form asp-action="Reject" asp-route-id="@comment.Id" method="post" class="d-inline">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('آیا می‌خواهید این نظر را حذف کنید؟');">حذف</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    index++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

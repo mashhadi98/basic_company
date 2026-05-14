@@ -1,0 +1,68 @@
+@model Company.Application.Features.Customers.DTOs.CustomerDto
+
+@{
+    ViewData["Title"] = Model.CompanyName;
+    ViewData["BreadcrumbParent"] = "مشتریان";
+    ViewData["BreadcrumbParentUrl"] = Url.Action("Index", "Customers", new { area = "Admin" });
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">جزئیات مشتری</h3>
+                <a class="btn btn-primary" href="/Admin/Customers/Edit/@Model.Id">ویرایش</a>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <strong>نام شرکت:</strong>
+                        <p>@Model.CompanyName</p>
+
+                        <strong>توضیح همکاری:</strong>
+                        <p>@Model.Description</p>
+
+                        <strong>وضعیت:</strong>
+                        <p>
+                            @if (Model.IsPublished)
+                            {
+                                <span class="badge bg-success">منتشر شده</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">پیش‌نویس</span>
+                            }
+                        </p>
+
+                        <strong>ترتیب نمایش:</strong>
+                        <p>@Model.SortOrder</p>
+                    </div>
+                    <div class="col-md-4">
+                        @if (!string.IsNullOrWhiteSpace(Model.CompanyImage))
+                        {
+                            <img src="@Model.CompanyImage" alt="@Model.CompanyName" class="img-fluid img-thumbnail" style="max-height:260px;object-fit:contain;" />
+                        }
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>تاریخ ایجاد:</strong>
+                        <p>@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</p>
+                    </div>
+                    <div class="col-md-6">
+                        @if (Model.UpdatedAt.HasValue)
+                        {
+                            <strong>آخرین به‌روزرسانی:</strong>
+                            <p>@Model.UpdatedAt?.ToString("yyyy-MM-dd HH:mm")</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a class="btn btn-secondary" href="/Admin/Customers">بازگشت</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

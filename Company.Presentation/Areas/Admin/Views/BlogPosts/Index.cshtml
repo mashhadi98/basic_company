@@ -1,0 +1,94 @@
+@model List<Company.Application.Features.Blog.DTOs.BlogPostDto>
+
+@{
+    ViewData["Title"] = "مطالب بلاگ";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">لیست مطالب بلاگ</h3>
+                <a class="btn btn-primary ms-auto" href="/Admin/BlogPosts/Create">ایجاد مطلب جدید</a>
+            </div>
+            <div class="card-body">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>عنوان</th>
+                                <th>اسلاگ</th>
+                                <th>دسته‌بندی</th>
+                                <th>وضعیت</th>
+                                <th>کامنت</th>
+                                <th>ایجاد شده</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center py-4">هیچ مطلب بلاگی پیدا نشد.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                var index = 1;
+                                foreach (var post in Model)
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@post.Title</td>
+                                        <td>@post.Slug</td>
+                                        <td>@post.CategoryId</td>
+                                        <td>
+                                            <span class="badge @(post.IsPublished ? "bg-success" : "bg-secondary")">
+                                                @(post.IsPublished ? "منتشر شده" : "پیش‌نویس")
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge @(post.AllowComments ? "bg-info" : "bg-secondary")">
+                                                @(post.AllowComments ? "فعال" : "غیرفعال")
+                                            </span>
+                                        </td>
+                                        <td>@post.CreatedAt.ToString("yyyy/MM/dd")</td>
+                                        <td>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <a class="btn btn-sm btn-outline-primary" href="/Admin/BlogPosts/Edit/@post.Id">ویرایش</a>
+                                                <form asp-action="TogglePublish" asp-route-id="@post.Id" method="post" class="d-inline">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-sm btn-outline-warning">@((post.IsPublished) ? "پیش‌نویس" : "انتشار")</button>
+                                                </form>
+                                                <form asp-action="Delete" asp-route-id="@post.Id" method="post" class="d-inline">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('آیا از حذف این مطلب مطمئن هستید؟');">حذف</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    index++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

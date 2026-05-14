@@ -14,12 +14,29 @@
                     <p>داشبورد</p>
                 </a>
             </li>
+            <li class="nav-item @Html.IsMenuOpen("Orders")">
+                <a href="#" class="nav-link @Html.IsActive("Orders")">
+                    <i class="nav-icon fas fa-box"></i>
+                    <p>
+                        سفارشات
+                        <i class="nav-arrow bi bi-chevron-right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="/Admin/Orders" class="nav-link @Html.IsActive("Orders", "Index")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>لیست سفارشات</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <!-- دسته بندی محصولات -->
             <li class="nav-item @Html.IsMenuOpen("ProductCategories")">
                 <a href="#" class="nav-link @Html.IsActive("ProductCategories")">
                     <i class="nav-icon fas fa-box"></i>
                     <p>
-                        دسته بندی
+                        دسته بندی محصول
                         <i class="nav-arrow bi bi-chevron-right"></i>
                     </p>
                 </a>
@@ -40,7 +57,7 @@
             </li>
 
             <!-- محصولات -->
-            <li class="nav-item @Html.IsMenuOpen("ProductCategories")">
+            <li class="nav-item @Html.IsMenuOpen("Products")">
                 <a href="#" class="nav-link @Html.IsActive("Products")">
                     <i class="nav-icon fas fa-box"></i>
                     <p>
@@ -63,8 +80,111 @@
                     </li>
                 </ul>
             </li>
+          
+            <li class="nav-item @Html.IsMenuOpen("BlogCategories")">
+                <a href="#" class="nav-link @Html.IsActive("BlogCategories")">
+                    <i class="nav-icon fas fa-box"></i>
+                    <p>
+                        دسته بندی بلاگ
+                        <i class="nav-arrow bi bi-chevron-right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="/Admin/BlogCategories" class="nav-link @Html.IsActive("BlogCategories", "Index")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>لیست دسته بندی</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/Admin/BlogCategories/Create" class="nav-link @Html.IsActive("BlogCategories", "Create")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>ایجاد دسته بندی جدید</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- محصولات -->
+            <li class="nav-item @Html.IsMenuOpen("BlogPosts")">
+                <a href="#" class="nav-link @Html.IsActive("BlogPosts")">
+                    <i class="nav-icon fas fa-box"></i>
+                    <p>
+                        بلاگ
+                        <i class="nav-arrow bi bi-chevron-right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="/Admin/BlogPosts" class="nav-link @Html.IsActive("BlogPosts", "Index")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>لیست بلاگ</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/Admin/BlogPosts/Create" class="nav-link @Html.IsActive("BlogPosts", "Create")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>ایجاد بلاگ جدید</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item @Html.IsMenuOpen("BlogPosts")">
+                <a href="#" class="nav-link @Html.IsActive("BlogPosts")">
+                    <i class="nav-icon fas fa-box"></i>
+                    <p>
+                        بلاگ
+                        <i class="nav-arrow bi bi-chevron-right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="/Admin/BlogPosts" class="nav-link @Html.IsActive("BlogPosts", "Index")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>لیست بلاگ</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/Admin/BlogPosts/Create" class="nav-link @Html.IsActive("BlogPosts", "Create")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>ایجاد بلاگ جدید</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/Admin/BlogComments/Index" class="nav-link @Html.IsActive("BlogComments", "Index")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>کامنت ها</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
 
+            <!-- مشتریان -->
+            <li class="nav-item @Html.IsMenuOpen("Customers")">
+                <a href="#" class="nav-link @Html.IsActive("Customers")">
+                    <i class="nav-icon fas fa-handshake"></i>
+                    <p>
+                        مشتریان
+                        <i class="nav-arrow bi bi-chevron-right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="/Admin/Customers" class="nav-link @Html.IsActive("Customers", "Index")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>لیست مشتریان</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/Admin/Customers/Create" class="nav-link @Html.IsActive("Customers", "Create")">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>ایجاد مشتری جدید</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
             <!-- خدمات -->
             <li class="nav-item @Html.IsMenuOpen("CompanyFeatures")">

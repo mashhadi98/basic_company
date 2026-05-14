@@ -24,6 +24,10 @@ public static class IdentityDataSeeder
         new("Product.Create", "ایجاد محصول", "افزودن محصول جدید", "Product"),
         new("Product.Edit", "ویرایش محصول", "ویرایش محصول موجود", "Product"),
         new("Product.Delete", "حذف محصول", "حذف محصول", "Product"),
+        new("Customer.View", "مشاهده مشتریان", "لیست مشتریان", "Customer"),
+        new("Customer.Create", "ایجاد مشتری", "افزودن مشتری جدید", "Customer"),
+        new("Customer.Edit", "ویرایش مشتری", "ویرایش مشتری موجود", "Customer"),
+        new("Customer.Delete", "حذف مشتری", "حذف مشتری", "Customer"),
     ];
 
     public static async Task SeedAsync(IServiceProvider services, CancellationToken cancellationToken = default)

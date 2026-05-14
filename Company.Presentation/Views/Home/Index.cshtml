@@ -1,7 +1,7 @@
-﻿@{
+﻿@model IEnumerable<Company.Domain.Entities.OrderRequest>
+@{
     ViewData["Title"] = "Home Page";
 }
-
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
@@ -10,4 +10,41 @@
         <p class="lead text-muted">@name — لایهٔ Presentation از طریق Application به Infrastructure متصل است.</p>
     }
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div class="mt-5">
+    <h3>سفارش‌های ۳۰ روز اخیر</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>شماره تماس</th>
+                <th>نام و نام خانوادگی</th>
+                <th>توضیحات</th>
+                <th>تاریخ ثبت</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.PhoneNumber</td>
+                <td>@order.FullName</td>
+                <td>@order.Description</td>
+                <td>@order.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm")</td>
+                <td>@(order.Status == Company.Domain.Entities.OrderRequestStatus.Registered ? "ثبت شده" : "تماس گرفته شده")</td>
+                <td>
+                    @if (order.Status == Company.Domain.Entities.OrderRequestStatus.Registered)
+                    {
+                        <form asp-action="ChangeStatus" asp-controller="Home" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@order.Id" />
+                            <button type="submit" class="btn btn-sm btn-success">تأیید تماس</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
 </div>

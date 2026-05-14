@@ -1,0 +1,120 @@
+@model List<Company.Application.Features.Customers.DTOs.CustomerDto>
+
+@{
+    ViewData["Title"] = "مشتریان";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card card-outline card-primary">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">لیست مشتریان</h3>
+                <a class="btn btn-primary ms-auto" href="/Admin/Customers/Create">ایجاد مشتری</a>
+            </div>
+            <div class="card-body">
+                @if (Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle" id="customersTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 96px;">تصویر</th>
+                                    <th>نام شرکت</th>
+                                    <th>توضیح همکاری</th>
+                                    <th>ترتیب</th>
+                                    <th>وضعیت</th>
+                                    <th style="width: 260px;">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var customer in Model)
+                                {
+                                    <tr data-id="@customer.Id">
+                                        <td>
+                                            @if (!string.IsNullOrWhiteSpace(customer.CompanyImage))
+                                            {
+                                                <img src="@customer.CompanyImage" alt="@customer.CompanyName" class="img-thumbnail" style="width:72px;height:72px;object-fit:contain;" />
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">بدون تصویر</span>
+                                            }
+                                        </td>
+                                        <td>@customer.CompanyName</td>
+                                        <td>@customer.Description</td>
+                                        <td>@customer.SortOrder</td>
+                                        <td>
+                                            @if (customer.IsPublished)
+                                            {
+                                                <span class="badge bg-success">منتشر شده</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">پیش‌نویس</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-info" href="/Admin/Customers/Details/@customer.Id">جزئیات</a>
+                                            <a class="btn btn-sm btn-outline-primary" href="/Admin/Customers/Edit/@customer.Id">ویرایش</a>
+                                            <form method="post" action="@Url.Action("TogglePublish", new { id = customer.Id })" style="display:inline;">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-warning">
+                                                    @(customer.IsPublished ? "لغو انتشار" : "انتشار")
+                                                </button>
+                                            </form>
+                                            <form method="post" action="@Url.Action("Delete", new { id = customer.Id })" style="display:inline;" onsubmit="return confirm('آیا از حذف این مشتری مطمئن هستید؟')">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">حذف</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle"></i>
+                        هیچ مشتری‌ای یافت نشد.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const customersBody = document.querySelector('#customersTable tbody');
+        if (customersBody && window.Sortable) {
+            new Sortable(customersBody, {
+                animation: 150,
+                onEnd: function () {
+                    const formData = new FormData();
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                    if (token) {
+                        formData.append('__RequestVerificationToken', token);
+                    }
+
+                    customersBody.querySelectorAll('tr').forEach(function (row, index) {
+                        formData.append(`items[${index}].Id`, row.dataset.id);
+                        formData.append(`items[${index}].SortOrder`, index);
+                    });
+
+                    fetch('@Url.Action("Reorder")', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(response => {
+                            if (response.success) {
+                                location.reload();
+                            }
+                        });
+                }
+            });
+        }
+    </script>
+}

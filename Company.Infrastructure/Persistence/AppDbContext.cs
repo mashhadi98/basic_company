@@ -22,11 +22,16 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<ProductGallery> ProductGalleries => Set<ProductGallery>();
     public DbSet<ProductTag> ProductTags => Set<ProductTag>();
     public DbSet<CompanyFeature> CompanyFeatures => Set<CompanyFeature>();
+    public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<StaticPage> StaticPages => Set<StaticPage>();
     public DbSet<SiteSetting> SiteSettings => Set<SiteSetting>();
+    public DbSet<BlogCategory> BlogCategories => Set<BlogCategory>();
+    public DbSet<BlogPost> BlogPosts => Set<BlogPost>();
+    public DbSet<BlogComment> BlogComments => Set<BlogComment>();
 
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<OrderRequest> OrderRequests => Set<OrderRequest>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

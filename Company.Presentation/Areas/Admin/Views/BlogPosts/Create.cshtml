@@ -1,0 +1,126 @@
+@model Company.Presentation.Areas.Admin.Models.BlogPostViewModel
+
+@{
+    ViewData["Title"] = "ایجاد مطلب بلاگ";
+    ViewData["BreadcrumbParent"] = "مطالب بلاگ";
+    ViewData["BreadcrumbParentUrl"] = Url.Action("Index", "BlogPosts", new { area = "Admin" });
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <h3 class="card-title">ایجاد مطلب بلاگ</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="mb-3">
+                                <label asp-for="Title" class="form-label">عنوان *</label>
+                                <input asp-for="Title" class="form-control" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Slug" class="form-label">اسلاگ *</label>
+                                <input asp-for="Slug" class="form-control" dir="ltr" placeholder="مثال: blog-post" />
+                                <span asp-validation-for="Slug" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Summary" class="form-label">خلاصه</label>
+                                <textarea asp-for="Summary" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="Summary" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Content" class="form-label">محتوا</label>
+                                <textarea asp-for="Content" class="form-control" rows="8"></textarea>
+                                <span asp-validation-for="Content" class="text-danger"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Author" class="form-label">نویسنده</label>
+                                    <input asp-for="Author" class="form-control" />
+                                </div>
+                     @*            <div class="col-md-6 mb-3">
+                                    <label asp-for="PublishedDate" class="form-label">تاریخ انتشار</label>
+                                    <input asp-for="PublishedDate" class="form-control" type="datetime-local" />
+                                </div> *@
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="CategoryId" class="form-label">دسته‌بندی</label>
+                                    <select asp-for="CategoryId" class="form-control">
+                                        <option value="">انتخاب کنید</option>
+                                        @if (ViewBag.Categories != null)
+                                        {
+                                            foreach (var category in (List<Company.Application.Features.Blog.DTOs.BlogCategoryDto>)ViewBag.Categories)
+                                            {
+                                                <option value="@category.Id" selected="@(category.Id == Model.CategoryId ? "selected" : null)">@category.Title</option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3 mb-3 d-flex align-items-center">
+                                    <div class="form-check mt-2">
+                                        <input asp-for="IsPublished" class="form-check-input" />
+                                        <label asp-for="IsPublished" class="form-check-label">منتشر شده</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3 d-flex align-items-center">
+                                    <div class="form-check mt-2">
+                                        <input asp-for="AllowComments" class="form-check-input" />
+                                        <label asp-for="AllowComments" class="form-check-label">اجازه نظر</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="FeaturedImageFile" class="form-label">تصویر شاخص</label>
+                                <input asp-for="FeaturedImageFile" class="form-control" type="file" accept="image/*" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="FeaturedImage" class="form-label">آدرس تصویر</label>
+                                <input asp-for="FeaturedImage" class="form-control" dir="ltr" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="SeoMetaTitle" class="form-label">عنوان SEO</label>
+                                <input asp-for="SeoMetaTitle" class="form-control" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="SeoMetaDescription" class="form-label">توضیحات SEO</label>
+                                <textarea asp-for="SeoMetaDescription" class="form-control" rows="3"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="SeoKeywords" class="form-label">کلمات کلیدی SEO</label>
+                                <input asp-for="SeoKeywords" class="form-control" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="CanonicalUrl" class="form-label">Canonical URL</label>
+                                <input asp-for="CanonicalUrl" class="form-control" dir="ltr" />
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">ذخیره</button>
+                                <a class="btn btn-secondary" href="/Admin/BlogPosts">بازگشت</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

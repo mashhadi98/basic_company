@@ -1,0 +1,56 @@
+@model Company.Presentation.Areas.Admin.Models.OrderRequestFilterViewModel
+@using Company.Domain.Entities
+@using Company.Presentation.Areas.Admin.Models
+@{
+    ViewData["Title"] = "لیست سفارشات";
+}
+<h2>لیست سفارشات</h2>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-3">
+        <input name="phoneNumber" value="@Model.PhoneNumber" class="form-control" placeholder="شماره تماس" />
+    </div>
+    <div class="col-md-3">
+        <input name="fullName" value="@Model.FullName" class="form-control" placeholder="نام و نام خانوادگی" />
+    </div>
+    <div class="col-md-3">
+        <select name="status" class="form-select">
+            <option value="">همه وضعیت‌ها</option>
+            @{
+                var registeredSelected = Model.Status == OrderRequestStatus.Registered ? "selected" : null;
+                var contactedSelected = Model.Status == OrderRequestStatus.Contacted ? "selected" : null;
+            }
+            <option value="0" selected="@registeredSelected">ثبت شده</option>
+            <option value="1" selected="@contactedSelected">تماس گرفته شده</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">جستجو</button>
+    </div>
+</form>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>شماره تماس</th>
+            <th>نام و نام خانوادگی</th>
+            <th>توضیحات</th>
+            <th>تاریخ ثبت</th>
+            <th>وضعیت</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model.Orders)
+        {
+            <tr>
+                <td>@order.PhoneNumber</td>
+                <td>@order.FullName</td>
+                <td>@order.Description</td>
+                <td>@order.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm")</td>
+                <td>@(order.Status == OrderRequestStatus.Registered ? "ثبت شده" : "تماس گرفته شده")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@{
+    var paginationModel = new PaginationModel { Page = Model.Page, PageSize = Model.PageSize, TotalCount = Model.TotalCount };
+}
+<partial name="../Shared/_Pagination" model="paginationModel" />

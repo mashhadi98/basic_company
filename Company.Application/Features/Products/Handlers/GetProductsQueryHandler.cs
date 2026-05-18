@@ -17,15 +17,7 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, List<Pr
 
     public async Task<List<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        var products = await _productRepository.GetAllAsync(request.Skip, request.Take, cancellationToken);
-
-        if (request.CategoryId.HasValue)
-            products = products.Where(p => p.CategoryId == request.CategoryId).ToList();
-
-        if (request.IsPublished.HasValue)
-            products = products.Where(p => p.PublishStatus == PublishStatus.Published).ToList();
-
-        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            var products = await _productRepository.GetAllAsync(request.CategoryId, request.IsPublished, request.Skip, request.Take, cancellationToken);
             products = products.Where(p =>
                 p.Title.Contains(request.SearchTerm, StringComparison.OrdinalIgnoreCase) ||
                 p.ShortDescription.Contains(request.SearchTerm, StringComparison.OrdinalIgnoreCase)

@@ -12,6 +12,8 @@ public interface IProductRepository
     Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<Product?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default);
     Task<List<Product>> GetAllAsync(int? skip = null, int? take = null, CancellationToken cancellationToken = default);
+    Task<List<Product>> GetAllAsync(Guid? categoryId = null, bool? isPublished = null, int? skip = null, int? take = null, CancellationToken cancellationToken = default);
+    Task<int> CountAsync(Guid? categoryId = null, bool? isPublished = null, CancellationToken cancellationToken = default);
     Task<List<Product>> GetByCategoryAsync(Guid categoryId, CancellationToken cancellationToken = default);
     Task AddAsync(Product product, CancellationToken cancellationToken = default);
     Task UpdateAsync(Product product, CancellationToken cancellationToken = default);

@@ -101,6 +101,42 @@ public class ProductRepository : IProductRepository
         return await query.ToListAsync(cancellationToken);
     }
 
+    public async Task<List<Product>> GetAllAsync(Guid? categoryId = null, bool? isPublished = null, int? skip = null, int? take = null, CancellationToken cancellationToken = default)
+    {
+        IQueryable<Product> query = _context.Products
+            .Include(p => p.Attributes)
+            .Include(p => p.GalleryImages)
+            .Include(p => p.Tags)
+            .OrderBy(p => p.SortOrder);
+
+        if (categoryId.HasValue)
+            query = query.Where(p => p.CategoryId == categoryId.Value);
+
+        if (isPublished.HasValue)
+            query = query.Where(p => p.PublishStatus == PublishStatus.Published);
+
+        if (skip.HasValue)
+            query = query.Skip(skip.Value);
+
+        if (take.HasValue)
+            query = query.Take(take.Value);
+
+        return await query.ToListAsync(cancellationToken);
+    }
+
+    public async Task<int> CountAsync(Guid? categoryId = null, bool? isPublished = null, CancellationToken cancellationToken = default)
+    {
+        IQueryable<Product> query = _context.Products;
+
+        if (categoryId.HasValue)
+            query = query.Where(p => p.CategoryId == categoryId.Value);
+
+        if (isPublished.HasValue)
+            query = query.Where(p => p.PublishStatus == PublishStatus.Published);
+
+        return await query.CountAsync(cancellationToken);
+    }
+
     public async Task<List<Product>> GetByCategoryAsync(Guid categoryId, CancellationToken cancellationToken = default)
     {
         return await _context.Products

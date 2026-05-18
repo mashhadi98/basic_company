@@ -1,6 +1,7 @@
 using Company.Application.Features.Blog.DTOs;
 using Company.Application.Features.Blog.Queries;
 using Company.Application.Features.Blog.Repositories;
+using Company.Domain.Entities;
 using MediatR;
 
 namespace Company.Application.Features.Blog.Handlers;
@@ -276,7 +277,7 @@ public class GetBlogCommentsQueryHandler : IRequestHandler<GetBlogCommentsQuery,
 
     public async Task<List<BlogCommentDto>> Handle(GetBlogCommentsQuery request, CancellationToken cancellationToken)
     {
-        List<Domain.Entities.BlogComment> comments;
+        List<BlogComment> comments;
 
         if (request.PostId.HasValue)
         {

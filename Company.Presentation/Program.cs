@@ -21,6 +21,9 @@ builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProv
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 builder.Services.AddAuthorization();
 
+// حافظه داخلی برای کش صفحه اصلی
+builder.Services.AddMemoryCache();
+
 // ارسال ایمیل (توسعه: فقط لاگ)
 builder.Services.AddTransient<IEmailSender, LoggingEmailSender>();
 

@@ -20,7 +20,10 @@ public class CustomerRepository : ICustomerRepository
 
     public async Task<List<Customer>> GetAllAsync(bool? isPublished = null, int? skip = null, int? take = null, CancellationToken cancellationToken = default)
     {
-        IQueryable<Customer> query = _context.Customers.OrderBy(c => c.SortOrder).ThenBy(c => c.CompanyName);
+        IQueryable<Customer> query = _context.Customers
+            .AsNoTracking()
+            .OrderBy(c => c.SortOrder)
+            .ThenBy(c => c.CompanyName);
 
         if (isPublished.HasValue)
             query = query.Where(c => c.IsPublished == isPublished.Value);

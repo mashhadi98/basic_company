@@ -1,7 +1,6 @@
 using Company.Application.Abstractions;
 using Company.Application.Features.Blog.Repositories;
 using Company.Application.Features.CompanyFeatures.Repositories;
-using Company.Application.Features.Customers.Repositories;
 using Company.Application.Features.SiteSettings.Repositories;
 using Company.Application.Features.StaticPages.Repositories;
 using Company.Application.Features.Products.Repositories;
@@ -15,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Company.Application.Features.Customers.Repositories;
 
 namespace Company.Infrastructure.DependencyInjection;
 
@@ -70,10 +70,11 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IProductAttributeRepository, ProductAttributeRepository>();
         services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+        // ثبت ریپوزیتوری مشتریان
+        services.AddScoped<Company.Application.Features.Customers.Repositories.ICustomerRepository, Company.Infrastructure.Persistence.Repositories.CustomerRepository>();
 
         // ثبت ریپوزیتوری ویژگی شرکت
         services.AddScoped<ICompanyFeatureRepository, CompanyFeatureRepository>();
-        services.AddScoped<ICustomerRepository, CustomerRepository>();
 
         // ثبت ریپوزیتوری صفحات ثابت
         services.AddScoped<IStaticPageRepository, StaticPageRepository>();

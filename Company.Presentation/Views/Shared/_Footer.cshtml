@@ -1,0 +1,28 @@
+@model Company.Presentation.Models.HomeViewModel
+
+<footer class="home-footer">
+    <div class="footer-brand">
+        <h3>@Model.Footer.CompanyName</h3>
+        <p>@Model.Footer.Description</p>
+    </div>
+
+    <div class="footer-links">
+        @if (Model.Footer.SocialLinks.Any())
+        {
+            <div class="footer-social">
+                <h4>شبکه‌های اجتماعی</h4>
+                <ul>
+                    @foreach (var link in Model.Footer.SocialLinks)
+                    {
+                        <li><a href="@link">@link</a></li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <div class="footer-contact">
+            <p><strong>آدرس کارخانه:</strong> @Model.Footer.FactoryAddress</p>
+            <p><strong>تلفن:</strong> @Model.Footer.Phone</p>
+        </div>
+    </div>
+</footer>

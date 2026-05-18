@@ -1,0 +1,56 @@
+@model Company.Presentation.Models.HomeViewModel
+
+<section id="clients" class="py-20 md:py-28 bg-surface-alt">
+    <div class="w-full px-4 md:px-8 lg:px-12 max-w-7xl mx-auto">
+        <div class="text-center mb-12 md:mb-16">
+            <span class="inline-block px-3 py-1 bg-primary/10 text-primary text-xs rounded-full mb-4">
+                همکاران
+                ما
+            </span>
+            <h2 class="text-3xl md:text-5xl font-bold text-text mb-3">
+                مشتریان ما
+            </h2>
+            @if (!string.IsNullOrEmpty(Model.CustomersDescription))
+            {
+                <p class="text-text-secondary text-sm md:text-base">
+                    @Model.CustomersDescription
+                </p>
+            }
+        </div>
+        <div class="animate-fade-in" style="animation-fill-mode: forwards;">
+            <div class="flex items-center gap-3 mb-6">
+                <button class="next-slide w-10 h-10 flex items-center justify-center rounded-full border transition-all duration-300 border-primary text-primary hover:bg-primary hover:text-white">
+                    <i class="fa-solid fa-arrow-right-line"></i>
+                </button>
+                <button class="prev-slide w-10 h-10 flex items-center justify-center rounded-full border transition-all duration-300 border-primary text-primary hover:bg-primary hover:text-white">
+                    <i class="fa-solid fa-arrow-left-line"></i>
+                </button>
+            </div>
+            <div class="swiper">
+
+                <div class="swiper-wrapper pb-4 snap-x snap-mandatory"
+                     style="scrollbar-width: none;">
+
+                    @foreach (var customer in Model.Customers)
+                    {
+                        <div class="swiper-slide">
+                            <div class="group flex-shrink-0 w-[200px] md:w-[240px] flex flex-col items-center justify-center p-6 md:p-8 bg-white rounded-2xl border border-surface-muted snap-start cursor-default transition-all duration-400 hover:border-primary/30 hover-lift hover-glow animate-fade-in-up opacity-0-start"
+                                 style="animation-delay: 0ms; animation-fill-mode: forwards;">
+                                <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-primary/10 rounded-2xl mb-4 transition-all duration-400 group-hover:bg-primary group-hover:scale-110">
+                                    <img src="@(customer.CompanyImage ?? "/images/no-image.png")" alt="@customer.CompanyName" />
+                                </div>
+                                <span class="text-sm md:text-base font-bold text-text text-center">
+                                    @customer.CompanyName
+                                </span>
+                                <span class="text-text-muted text-xs mt-1 text-center">
+                                    @customer.Description
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

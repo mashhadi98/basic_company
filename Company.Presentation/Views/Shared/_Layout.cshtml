@@ -1,15 +1,24 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Company</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Company.styles.css" asp-append-version="true" />
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - کارخانه پلاستیک</title>
+    <meta name="description"
+        content="کارخانه تولید پلاستیک با بیش از دو دهه تجربه در تولید محصولات پلاستیکی با کیفیت بالا و قیمت منصفانه">
     <link href="~/vazir-font-v18.0.1/css/vazir-fonts.css" rel="stylesheet" />
+    <link href="~/fontawesome.pro.7.0.1/css/fontawesome.css" rel="stylesheet" />
+    <link href="~/fontawesome.pro.7.0.1/css/solid.css" rel="stylesheet" />
+    <link href="~/css/remixicon.min.css" rel="stylesheet" />
+    <link href="~/css/index-bvtpj_t4.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link type="image/png" rel="icon" href="https://public.readdy.ai/gen_page/readdy-logo.png">
+    <link rel="stylesheet" href="~/css/swiper-bundle.min.css" />
+
 </head>
+
 <body>
     @if (User.Identity?.IsAuthenticated != null && User.IsInRole("Admin"))
     {
@@ -17,76 +26,341 @@
             <a style="color: white;text-decoration: none;" asp-action="Index" asp-area="Admin" asp-controller="Home">داشبورد مدیریت</a>
         </div>
     }
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Company</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        @if (User.Identity?.IsAuthenticated == true && User.HasClaim(AuthClaimTypes.Permission, "Product.View"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Products" asp-action="Index">محصولات</a>
-                            </li>
-                        }
-                        @if (User.Identity?.IsAuthenticated == true && User.HasClaim(AuthClaimTypes.Permission, "Product.Create"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Products" asp-action="Create">ایجاد محصول</a>
-                            </li>
-                        }
-                    </ul>
-                    <ul class="navbar-nav">
-                        @if (User.Identity?.IsAuthenticated == true)
-                        {
-                            <li class="nav-item align-self-center me-2 small text-muted">
-                                @User.Identity!.Name
-                            </li>
-                            <li class="nav-item">
-                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-link nav-link text-dark p-0">خروج</button>
-                                </form>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">ورود</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">ثبت‌نام</a>
-                            </li>
-                        }
-                    </ul>
+    <div id="root">
+        <main class="min-h-screen">
+            @{
+                var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+                var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+
+                bool isHomePage =
+                currentController == "Home" &&
+                currentAction == "Index";
+            }
+            <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-transparent @(isHomePage ? "navbar-home" : "navbar-default")">
+                <div class="w-full px-4 md:px-8 lg:px-12">
+                    <div class="flex items-center justify-between h-16 md:h-20">
+                        <a href="#home" class="flex items-center gap-2 group">
+                            <div
+                                class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-lg transition-all duration-300 group-hover:bg-primary/20">
+                                <img alt="لوگو" class="h-7 w-auto"
+                                    src="https://public.readdy.ai/ai/img_res/b3662af3-f1d6-4616-af61-a0362aac3d6c.png">
+                            </div>
+                            <span class="font-bold text-base md:text-lg whitespace-nowrap transition-colors text-white">
+                                کارخانه
+                                پلاستیک
+                            </span>
+                        </a>
+                        <div class="hidden lg:flex items-center gap-1">
+                            <a href="/"
+                               class="@(currentController == "Home" && currentAction == "Index" ? "active" : "") relative px-4 py-2 text-sm whitespace-nowrap transition-all duration-300 rounded-full cursor-pointer text-white font-semibold hover:text-primary hover:bg-primary/5">
+                                خانه
+                                <span
+                                    class="absolute bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-primary rounded-full">
+                                </span>
+                            </a>
+                            <a href="/about"
+                               class=" @(currentController == "aboutus" && currentAction == "Index" ? "active" : "") relative px-4 py-2 text-sm whitespace-nowrap transition-all duration-300 rounded-full cursor-pointer text-white/90 hover:text-primary hover:bg-primary/5">
+                                درباره
+                                ما
+                            </a>
+                            <a href="/products"
+                               class="@(currentController == "products" && currentAction == "Index" ? "active" : "") relative px-4 py-2 text-sm whitespace-nowrap transition-all duration-300 rounded-full cursor-pointer text-white/90 hover:text-primary hover:bg-primary/5">
+                                محصولات
+                            </a>
+                         
+                            <a href="/blogs"
+                               class="@(currentController == "blogs" && currentAction == "Index" ? "active" : "") relative px-4 py-2 text-sm whitespace-nowrap transition-all duration-300 rounded-full cursor-pointer text-white/90 hover:text-primary hover:bg-primary/5">
+                                بلاگ
+                            </a>
+                            <a href="/contact"
+                               class="@(currentController == "contact" && currentAction == "Index" ? "active" : "") relative px-4 py-2 text-sm whitespace-nowrap transition-all duration-300 rounded-full cursor-pointer text-white/90 hover:text-primary hover:bg-primary/5">
+                                ارتباط
+                                با ما
+                            </a>
+                        </div>
+                        <a href="#order"
+                            class="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-sm rounded-full hover:bg-primary-dark hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 whitespace-nowrap hover-lift cursor-pointer">
+                            ثبت
+                            سفارش
+                            <i class="fa-solid fa-angle-left transition-transform group-hover:-translate-x-1">
+                            </i>
+                        </a>
+                        <button
+                            class="lg:hidden w-10 h-10 flex items-center justify-center rounded-md transition-all hover:bg-white/10 cursor-pointer text-white">
+                            <i class="fa-solid fa-menu-line text-xl">
+                            </i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+            </nav>
+
             @RenderBody()
+
+            <div id="footer-wrapper" class="relative">
+                <footer class="relative bg-[#2a2a2a] pt-20 pb-10 overflow-hidden">
+                    <div class="absolute inset-0 opacity-5">
+                        <div class="absolute top-0 left-0 w-96 h-96 bg-primary rounded-full blur-[150px]">
+                        </div>
+                        <div class="absolute bottom-0 right-0 w-96 h-96 bg-primary rounded-full blur-[150px]">
+                        </div>
+                    </div>
+                    <div class="relative z-10 w-full px-4 md:px-8 lg:px-12 max-w-7xl mx-auto">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6 mb-16">
+                            <div class="col-span-2 md:col-span-1">
+                                <a href="/" class="flex items-center gap-3 mb-6 group cursor-pointer">
+                                    <div class="w-12 h-12 flex items-center justify-center bg-primary/20 rounded-xl transition-all duration-300 group-hover:bg-primary/30">
+                                        <img alt="لوگو" class="h-8 w-auto"
+                                             src="https://public.readdy.ai/ai/img_res/b3662af3-f1d6-4616-af61-a0362aac3d6c.png">
+                                    </div>
+                                    <span class="font-bold text-lg text-white">
+                                        کارخانه پلاستیک
+                                    </span>
+                                </a>
+                                <p class="text-white/50 text-sm leading-relaxed mb-6 max-w-xs">
+                                    تولید کننده برتر محصولات
+                                    پلاستیکی در ایران با بیش از دو دهه تجربه و کیفیت بی&zwnj;نظیر.
+                                </p>
+                                <div class="flex items-center gap-3">
+                                    <a href="#" rel="nofollow"
+                                       class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white/60 hover:bg-primary hover:text-white transition-all duration-300 hover-lift">
+                                        <i class="fa-solid fa-instagram-line text-base">
+                                        </i>
+                                    </a>
+                                    <a href="#" rel="nofollow"
+                                       class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white/60 hover:bg-primary hover:text-white transition-all duration-300 hover-lift">
+                                        <i class="fa-solid fa-telegram-line text-base">
+                                        </i>
+                                    </a>
+                                    <a href="#" rel="nofollow"
+                                       class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white/60 hover:bg-primary hover:text-white transition-all duration-300 hover-lift">
+                                        <i class="fa-solid fa-linkedin-line text-base">
+                                        </i>
+                                    </a>
+                                    <a href="#" rel="nofollow"
+                                       class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white/60 hover:bg-primary hover:text-white transition-all duration-300 hover-lift">
+                                        <i class="fa-solid fa-whatsapp-line text-base">
+                                        </i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-white mb-4">
+                                    دسترسی سریع
+                                </h4>
+                                <div class="w-10 h-0.5 bg-primary mb-6 rounded-full">
+                                </div>
+                                <ul class="space-y-3">
+                                    <li>
+                                        <a href="/"
+                                           class="text-white/50 text-sm hover:text-primary transition-colors duration-300 inline-flex items-center gap-1 group cursor-pointer">
+                                            <span>
+                                                خانه
+                                            </span>
+                                            <i class="fa-solid fa-arrow-left-line text-xs opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/about"
+                                           class="text-white/50 text-sm hover:text-primary transition-colors duration-300 inline-flex items-center gap-1 group cursor-pointer">
+                                            <span>
+                                                درباره ما
+                                            </span>
+                                            <i class="fa-solid fa-arrow-left-line text-xs opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/products"
+                                           class="text-white/50 text-sm hover:text-primary transition-colors duration-300 inline-flex items-center gap-1 group cursor-pointer">
+                                            <span>
+                                                محصولات
+                                            </span>
+                                            <i class="fa-solid fa-arrow-left-line text-xs opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/blog"
+                                           class="text-white/50 text-sm hover:text-primary transition-colors duration-300 inline-flex items-center gap-1 group cursor-pointer">
+                                            <span>
+                                                بلاگ
+                                            </span>
+                                            <i class="fa-solid fa-arrow-left-line text-xs opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                            </i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-white mb-4">
+                                    خدمات
+                                </h4>
+                                <div class="w-10 h-0.5 bg-primary mb-6 rounded-full">
+                                </div>
+                                <ul class="space-y-3">
+                                    <li>
+                                        <a href="#services"
+                                           class="text-white/50 text-sm hover:text-primary transition-colors duration-300 inline-flex items-center gap-1 group cursor-pointer">
+                                            <span>
+                                                پشتیبانی ۲۴ ساعته
+                                            </span>
+                                            <i class="fa-solid fa-arrow-left-line text-xs opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#services"
+                                           class="text-white/50 text-sm hover:text-primary transition-colors duration-300 inline-flex items-center gap-1 group cursor-pointer">
+                                            <span>
+                                                کیفیت بالا
+                                            </span>
+                                            <i class="fa-solid fa-arrow-left-line text-xs opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#services"
+                                           class="text-white/50 text-sm hover:text-primary transition-colors duration-300 inline-flex items-center gap-1 group cursor-pointer">
+                                            <span>
+                                                قیمت منصفانه
+                                            </span>
+                                            <i class="fa-solid fa-arrow-left-line text-xs opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#services"
+                                           class="text-white/50 text-sm hover:text-primary transition-colors duration-300 inline-flex items-center gap-1 group cursor-pointer">
+                                            <span>
+                                                تحویل به&zwnj;موقع
+                                            </span>
+                                            <i class="fa-solid fa-arrow-left-line text-xs opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                            </i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-white mb-4">
+                                    محصولات
+                                </h4>
+                                <div class="w-10 h-0.5 bg-primary mb-6 rounded-full">
+                                </div>
+                                <ul class="space-y-3">
+                                    <li>
+                                        <a href="/products"
+                                           class="text-white/50 text-sm hover:text-primary transition-colors duration-300 inline-flex items-center gap-1 group cursor-pointer">
+                                            <span>
+                                                ظروف پلاستیکی
+                                            </span>
+                                            <i class="fa-solid fa-arrow-left-line text-xs opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/products"
+                                           class="text-white/50 text-sm hover:text-primary transition-colors duration-300 inline-flex items-center gap-1 group cursor-pointer">
+                                            <span>
+                                                لوله و اتصالات
+                                            </span>
+                                            <i class="fa-solid fa-arrow-left-line text-xs opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/products"
+                                           class="text-white/50 text-sm hover:text-primary transition-colors duration-300 inline-flex items-center gap-1 group cursor-pointer">
+                                            <span>
+                                                بسته&zwnj;بندی دارویی
+                                            </span>
+                                            <i class="fa-solid fa-arrow-left-line text-xs opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/products"
+                                           class="text-white/50 text-sm hover:text-primary transition-colors duration-300 inline-flex items-center gap-1 group cursor-pointer">
+                                            <span>
+                                                بسته&zwnj;بندی غذایی
+                                            </span>
+                                            <i class="fa-solid fa-arrow-left-line text-xs opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                            </i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="bg-white/5 rounded-2xl p-6 md:p-8 mb-12">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 flex items-center justify-center bg-primary/20 rounded-xl">
+                                        <i class="fa-solid fa-map-pin-2-line text-primary text-xl">
+                                        </i>
+                                    </div>
+                                    <div>
+                                        <div class="text-white text-sm font-medium mb-1">
+                                            آدرس کارخانه
+                                        </div>
+                                        <div class="text-white/50 text-xs">
+                                            تهران، جاده مخصوص کرج، کیلومتر ۱۸، شهرک صنعتی
+                                            پلاستیک
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 flex items-center justify-center bg-primary/20 rounded-xl">
+                                        <i class="fa-solid fa-phone-line text-primary text-xl">
+                                        </i>
+                                    </div>
+                                    <div>
+                                        <div class="text-white text-sm font-medium mb-1">
+                                            تلفن تماس
+                                        </div>
+                                        <div class="text-white/50 text-xs">۰۲۱-۴۴۹۸۷۶۵۴</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 flex items-center justify-center bg-primary/20 rounded-xl">
+                                        <i class="fa-solid fa-time-line text-primary text-xl">
+                                        </i>
+                                    </div>
+                                    <div>
+                                        <div class="text-white text-sm font-medium mb-1">
+                                            ساعت کاری
+                                        </div>
+                                        <div class="text-white/50 text-xs">
+                                            شنبه تا چهارشنبه: ۸ صبح تا ۵ عصر
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <p class="text-white/40 text-sm">© ۲۰۲۶ کارخانه پلاستیک. تمامی حقوق محفوظ است.</p>
+                            <div class="flex items-center gap-6">
+                                <span class="text-white/40 text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-phone-line text-primary">
+                                    </i>۰۲۱-۴۴۹۸۷۶۵۴
+                                </span>
+                                <span class="text-white/40 text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-time-line text-primary">
+                                    </i>
+                                    شنبه تا چهارشنبه: ۸ صبح تا ۵ عصر
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                
+            </div>
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Company - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/fontawesome.pro.7.0.1/js/fontawesome.js"></script>
+    <script src="~/fontawesome.pro.7.0.1/js/solid.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
+
